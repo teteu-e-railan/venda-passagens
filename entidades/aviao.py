@@ -1,9 +1,22 @@
 class Aviao:
-    def __init__(self, modelo: str, fileiras: int, assentos_por_fileira: int):
+    def __init__(self,codigo: str, modelo: str, fileiras: int, assentos_por_fileira: int):
+        self.__codigo = codigo
         self.__modelo = modelo
         self.__fileiras = fileiras
         self.__assentos_por_fileira = assentos_por_fileira
         self.__assentos_total = assentos_por_fileira * fileiras
+
+
+    '''adicionei a propiedade CODIGO parar ser mais facil de encontar o avião na hora de alterar
+    os dados, vamos utilizar o codigo apra ser o localizador dele dentro da lista.
+    '''
+    @property
+    def codigo(self):
+        return self.__codigo
+    
+    @codigo.setter
+    def codigo(self, codigo):
+        self.__codigo = codigo
 
     @property
     def modelo(self):
