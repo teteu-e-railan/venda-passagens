@@ -2,7 +2,7 @@ from abc import ABC
 
 
 class AbstractTela(ABC):
-    def verifica_opcao(mensagem: str, opcoes_validas: 'list[int]') -> str:
+    def verifica_opcao(self, mensagem: str, opcoes_validas: "list[int]") -> int:
         while True:
             opcao_selecionada = int(input(mensagem))
 
@@ -16,5 +16,5 @@ class AbstractTela(ABC):
                 print("Valor incorreto: Digite um valor válido!")
                 print("Opções válidas:", opcoes_validas)
 
-    def mostra_mensagem(mensagem: int):
+    def mostra_mensagem(self, mensagem: int):
         print(mensagem)
