@@ -2,7 +2,7 @@ from abc import ABC
 
 
 class AbstractTela(ABC):
-    def verifica_opcao(mensagem: str, opcoes_validas: list[int]):
+    def verifica_opcao(mensagem: str, opcoes_validas: 'list[int]') -> str:
         while True:
             opcao_selecionada = int(input(mensagem))
 
