@@ -9,9 +9,9 @@ class AbstractTela(ABC):
             try:
                 if opcao_selecionada not in opcoes_validas:
                     raise ValueError
-                
+
                 return opcao_selecionada
-            
+
             except ValueError:
                 print("Valor incorreto: Digite um valor válido!")
                 print("Opções válidas:", opcoes_validas)
