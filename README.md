@@ -15,9 +15,13 @@ Caso nao apareça, você pode selecionar o ambiente de maneira manual, basta abr
 \
 Em seguida selecione o ambiente que contenha `Python [versao_do_python] ('.venv':venv)`
 
-2.**Instalando o `Black`:** para instalar o formatador `Black` basta abrir o terminal do VSCode ( `Ctrl+J` ) e digitar o comando
+2. **Instalando o `Black`:** para instalar o formatador `Black` basta abrir o terminal do VSCode ( `Ctrl+J` ) e digitar o comando:
+
 ```bash
 pip install black
 ```
 
-Pronto! Agora é só sair codando :partying_face:
+3. **Instale a extensao do formatador Black**: entre no Marketplace de extensões do VSCode, procure e instale a extensão **`Black Formatter`**\
+![image](https://github.com/teteu-e-railan/venda-passagens/assets/69802406/6ce1486a-5a9e-4d14-b48d-7e583ee8631b)
+
+### Pronto! Agora é só sair codando :partying_face:
