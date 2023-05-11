@@ -29,5 +29,5 @@ class AbstractTela(ABC):
                 print("Valor incorreto: Digite um valor válido!")
                 print("Opções válidas:", self.lista_de_opcoes_validas)
 
-    def mostra_mensagem(self, mensagem: int):
+    def mostra_mensagem(self, mensagem: str):
         print(mensagem)
