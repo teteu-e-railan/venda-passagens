@@ -1,5 +1,6 @@
 from entidades.aviao import Aviao
 from telas.telaAviao import TelaAviao
+from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
 
 class ControladorAviao:
@@ -20,7 +21,7 @@ class ControladorAviao:
             try:
                 for aviao in self.__avioes:
                     if aviao.modelo == dados_aviao["modelo"]:
-                        raise Exception
+                        raise AviaoJahExisteException
                 novo_aviao = Aviao(
                     dados_aviao["modelo"],
                     dados_aviao["fileiras"],
