@@ -26,7 +26,7 @@ class TelaAviao:
             "assentos_por_fileira": assentos_por_fileira,
         }
 
-    def mostra_amigo(self, dados_aviao):
+    def mostra_aviao(self, dados_aviao):
         print("Modelo do Avião: ", dados_aviao["modelo"])
         print("fileiras: ", dados_aviao["fileiras"])
         print("assentos por fileira: ", dados_aviao["assento_por_fileiras"])
