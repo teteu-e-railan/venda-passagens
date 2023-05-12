@@ -4,7 +4,7 @@ from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
 
 class ControladorAviao:
-    def __init__(self, controlador_sistema):
+    def __init__(self, controlador_sistema=None):
         self.__controlador_sistema = controlador_sistema
         self.__tela_aviao = TelaAviao()
         self.__avioes: list[Aviao] = []
@@ -81,3 +81,7 @@ class ControladorAviao:
 
 
 # main
+
+
+controlador = ControladorAviao()
+controlador.abre_tela()
