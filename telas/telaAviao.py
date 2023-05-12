@@ -38,5 +38,5 @@ class TelaAviao(AbstractTela):
         print("\n")
 
     def seleciona_aviao(self):
-        modelo = input("Modelo do avião que deseja selecionar: ")
+        modelo = input("Modelo do avião que deseja selecionar: ").upper()
         return modelo
