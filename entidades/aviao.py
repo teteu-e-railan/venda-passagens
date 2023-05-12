@@ -25,6 +25,7 @@ class Aviao:
     @fileiras.setter
     def fileiras(self, nova_fileiras: int):
         self.__fileiras = nova_fileiras
+        self.__assentos_total = self.assentos_por_fileira * self.fileiras
 
     @property
     def assentos_por_fileira(self):
@@ -33,6 +34,7 @@ class Aviao:
     @assentos_por_fileira.setter
     def assentos_por_fileira(self, nova_assentos_por_fileira: int):
         self.__assentos_por_fileira = nova_assentos_por_fileira
+        self.__assentos_total = self.assentos_por_fileira * self.fileiras
 
     @property
     def assentos_total(self):

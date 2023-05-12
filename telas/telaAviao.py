@@ -1,24 +1,30 @@
 from controladores.controladorAviao import ControladorAviao
+from telas.abstractTela import AbstractTela
 
 
-class TelaAviao:
+class TelaAviao(AbstractTela):
+    def __init__(self):
+        super().__init__(
+            {
+                1: "Incluir Avião",
+                2: "Alterar Avião",
+                3: "Listar Aviões",
+                4: "Excluir Avião",
+                0: "Voltar",
+            }
+        )
+
     def tela_opcoes(self):
         print("-------- Aviões ----------")
-        print("Escolha a opcao")
-        print("1 - Incluir Avião")
-        print("2 - Alterar Avião")
-        print("3 - Listar Aviões")
-        print("4 - Excluir Avião")
-        print("0 - Retornar")
-
-        opcao = int(input("Escolha a opcao: "))
-        return opcao
+        for index, opcao in self.opcoes.items():
+            print(f"{index} - {opcao}")
+        return self.verifica_opcao("Escolha uma opção: ")
 
     def pega_dados_aviao(self):
         print("-------- DADOS AVIÃO ----------")
         modelo = input("Modelo: ")
-        fileiras = input("Fileiras: ")
-        assentos_por_fileira = input("Assentos por fileira: ")
+        fileiras = int(input("Fileiras: "))
+        assentos_por_fileira = int(input("Assentos por fileira: "))
 
         return {
             "modelo": modelo,
@@ -35,6 +41,3 @@ class TelaAviao:
     def seleciona_aviao(self):
         modelo = input("Modelo do avião que deseja selecionar: ")
         return modelo
-
-    def mostra_mensagem(self, msg):
-        print(msg)

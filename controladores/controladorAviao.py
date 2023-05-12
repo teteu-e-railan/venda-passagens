@@ -43,7 +43,7 @@ class ControladorAviao:
 
     def listar_avioes(self):
         for aviao in self.__avioes:
-            self.__tela_aviao.mostra_mensagem(
+            self.__tela_aviao.mostra_aviao(
                 {
                     "Modelo": aviao.modelo,
                     "Capacidade": aviao.__assentos_total,
@@ -58,7 +58,7 @@ class ControladorAviao:
         aviao = self.buscar_aviao_por_modelo(modelo_aviao)
 
         if aviao is not None:
-            self.__aviaos.remove(aviao)
+            self.__avioes.remove(aviao)
             self.listar_avioes()
         else:
             self.__tela_aviao.mostra_mensagem("ATENCAO: aviao não existente")
@@ -67,10 +67,17 @@ class ControladorAviao:
         self.__controlador_sistema.abre_tela()
 
     def abre_tela(self):
-        self.__tela_aviao.tela_opcoes = {
-            1: self.incluir_amigo,
-            2: self.alterar_amigo,
-            3: self.lista_amigos,
-            4: self.excluir_amigo,
+        opcao = self.__tela_aviao.tela_opcoes()
+
+        opcoes_controlador = {
+            1: self.incluir_aviao,
+            2: self.alterar_aviao,
+            3: self.listar_avioes,
+            4: self.excluir_aviao,
             0: self.retornar,
         }
+
+        return opcoes_controlador[opcao]()
+
+
+# main
