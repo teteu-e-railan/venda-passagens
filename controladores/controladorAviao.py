@@ -3,6 +3,16 @@ from telas.telaAviao import TelaAviao
 from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
 
+"""
+INCLUIR OS .UPPER() EM TODOS OS IMPUTS QUE SÃO STR, TESTE 
+NOS NOME DOS PASSAGEIROS DEVE SE INCLUIR
+O .TITLE(), QUANDO FOR ALTERAR UM AVIAO DEVE SE MOSTRA OS DADOS
+QUE FORAM ALTERADOS E UMA MENSGAEM DE SUCESSO!
+FALTA INCLUIR UMA MENSAGEM DE QUANDO O AVIAO JA EXISTE DENTRO DA LISTA
+
+"""
+
+
 class ControladorAviao:
     def __init__(self, controlador_sistema=None):
         self.__controlador_sistema = controlador_sistema
@@ -31,7 +41,8 @@ class ControladorAviao:
             except Exception:
                 pass
 
-    def alterar_aviao(self, modelo):
+    def alterar_aviao(self):
+        modelo = self.__tela_aviao.seleciona_aviao()
         aviao = self.buscar_aviao_por_modelo(modelo)
         if aviao is None:
             self.__tela_aviao.mostra_mensagem("Avião não encontrado!!!")
@@ -45,10 +56,9 @@ class ControladorAviao:
         for aviao in self.__avioes:
             self.__tela_aviao.mostra_aviao(
                 {
-                    "Modelo": aviao.modelo,
-                    "Capacidade": aviao.__assentos_total,
-                    "Fileiras": aviao.fileiras,
-                    "Assentos por fileira": aviao.assentos_por_fileira,
+                    "modelo": aviao.modelo,
+                    "fileiras": aviao.fileiras,
+                    "assentos_por_fileira": aviao.assentos_por_fileira,
                 }
             )
 
@@ -62,13 +72,12 @@ class ControladorAviao:
             self.listar_avioes()
         else:
             self.__tela_aviao.mostra_mensagem("ATENCAO: aviao não existente")
+        # INCLUIR UMA MENSAGEM DE SUCESSO E O MODELO DE AVIÃO QUE FOI EXCLUIDO.
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
     def abre_tela(self):
-        opcao = self.__tela_aviao.tela_opcoes()
-
         opcoes_controlador = {
             1: self.incluir_aviao,
             2: self.alterar_aviao,
@@ -76,12 +85,6 @@ class ControladorAviao:
             4: self.excluir_aviao,
             0: self.retornar,
         }
-
-        return opcoes_controlador[opcao]()
-
-
-# main
-
-
-controlador = ControladorAviao()
-controlador.abre_tela()
+        while True:
+            opcao = self.__tela_aviao.tela_opcoes()
+            opcoes_controlador[opcao]()

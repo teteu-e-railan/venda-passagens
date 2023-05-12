@@ -21,20 +21,20 @@ class TelaAviao(AbstractTela):
 
     def pega_dados_aviao(self):
         print("-------- DADOS AVIÃO ----------")
-        modelo = input("Modelo: ")
+        modelo = input("Modelo: ").upper()
         fileiras = int(input("Fileiras: "))
         assentos_por_fileira = int(input("Assentos por fileira: "))
 
         return {
             "modelo": modelo,
-            "Fileiras": fileiras,
+            "fileiras": fileiras,
             "assentos_por_fileira": assentos_por_fileira,
         }
 
     def mostra_aviao(self, dados_aviao):
         print("Modelo do Avião: ", dados_aviao["modelo"])
         print("fileiras: ", dados_aviao["fileiras"])
-        print("assentos por fileira: ", dados_aviao["assento_por_fileiras"])
+        print("assentos por fileira: ", dados_aviao["assentos_por_fileira"])
         print("\n")
 
     def seleciona_aviao(self):
