@@ -37,7 +37,7 @@ class ControladorSistema:
         exit(0)
 
     def abre_tela(self):
-        opcoes_tela = {
+        opcoes_controlador = {
             1: self.controlador_reservas,
             2: self.controlador_passageiros,
             3: self.controlador_tripulantes,
@@ -52,4 +52,4 @@ class ControladorSistema:
             # TODO:
             # quando os controladores estiverem implementados,
             # usar `opcao_escolhida` para chamar o controlador desejado.
-            opcoes_tela[0]()
+            opcoes_controlador[0]()
