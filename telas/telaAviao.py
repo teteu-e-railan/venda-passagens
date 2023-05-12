@@ -1,4 +1,3 @@
-from controladores.controladorAviao import ControladorAviao
 from telas.abstractTela import AbstractTela
 
 
