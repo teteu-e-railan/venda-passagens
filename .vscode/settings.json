@@ -19,4 +19,9 @@
   ],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true,
+
+  // Ocultar diretórios do editor:
+  "files.exclude": {
+    "**/__pycache__": true,
+  },
 }
