@@ -1,4 +1,4 @@
-from controladores.controladorAviao import ControladorAviao
+from controladores.controladorSistema import ControladorSistema
 
-
-ControladorAviao().abre_tela()
+if __name__ == "__main__":
+    ControladorSistema().inicializa_sistema()
