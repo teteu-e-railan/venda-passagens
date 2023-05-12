@@ -16,9 +16,8 @@ class TelaSistema(AbstractTela):
 
     def mostra_opcoes(self) -> int:
         print("-------- Sistema ----------")
-        print("Escolha uma opção:")
 
         for index, opcao in self.opcoes.items():
             print(f"{index} - {opcao}")
 
-        return self.verifica_opcao("Digite a opção: ")
+        return self.verifica_opcao("Escolha uma opção: ")
