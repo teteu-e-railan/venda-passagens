@@ -21,9 +21,33 @@ class TelaAviao(AbstractTela):
 
     def pega_dados_aviao(self):
         print("-------- DADOS AVIÃO ----------")
-        modelo = input("Modelo: ").upper()
-        fileiras = int(input("Fileiras: "))
-        assentos_por_fileira = int(input("Assentos por fileira: "))
+        while True:
+            modelo = input("Modelo: ").upper()
+            if modelo:
+                break
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            fileiras = input("Fileiras: ")
+            if fileiras:
+                try:
+                    fileiras = int(fileiras)
+                    break
+                except ValueError:
+                    print("Dado invalido, digite novamente!!!")
+            else:
+                print("Dado invalido, digite novamente!!!")
+        while True:
+            assentos_por_fileira = input("Assentos por fileira: ")
+            if assentos_por_fileira:
+                try:
+                    assentos_por_fileira = int(assentos_por_fileira)
+                    break
+                except ValueError:
+                    print("Dado invalido, digite novamente!!!")
+            else:
+                print("Dado invalido, digite novamente!!!")
 
         return {
             "modelo": modelo,
