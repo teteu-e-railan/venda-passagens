@@ -95,7 +95,6 @@ class ControladorAviao:
                     self.__tela_aviao.mostra_mensagem(
                         f"Avião {modelo_aviao} excluído com sucesso!!!"
                     )
-                    self.listar_avioes()
                 else:
                     self.__tela_aviao.mostra_mensagem("Exclusão de avião cancelada!!!")
                 break
