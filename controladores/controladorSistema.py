@@ -1,4 +1,5 @@
 from telas.telaSistema import TelaSistema
+from controladores.controladorAviao import ControladorAviao
 
 
 class ControladorSistema:
@@ -8,7 +9,7 @@ class ControladorSistema:
         self.__controlador_passageiros = None
         self.__controlador_tripulantes = None
         self.__controlador_voos = None
-        self.__controlador_avioes = None
+        self.__controlador_avioes = ControladorAviao(self)
 
     @property
     def controlador_reservas(self):
@@ -42,7 +43,7 @@ class ControladorSistema:
             2: self.controlador_passageiros,
             3: self.controlador_tripulantes,
             4: self.controlador_voos,
-            5: self.controlador_avioes,
+            5: self.controlador_avioes.abre_tela,
             0: self.finaliza_sistema,
         }
 
@@ -52,4 +53,4 @@ class ControladorSistema:
             # TODO:
             # quando os controladores estiverem implementados,
             # usar `opcao_escolhida` para chamar o controlador desejado.
-            opcoes_controlador[0]()
+            opcoes_controlador[opcao_escolhida]()

@@ -2,7 +2,6 @@ from entidades.aviao import Aviao
 from telas.telaAviao import TelaAviao
 from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
-
 """
 INCLUIR OS .UPPER() EM TODOS OS IMPUTS QUE SÃO STR, TESTE 
 NOS NOME DOS PASSAGEIROS DEVE SE INCLUIR
@@ -14,7 +13,7 @@ FALTA INCLUIR UMA MENSAGEM DE QUANDO O AVIAO JA EXISTE DENTRO DA LISTA
 
 
 class ControladorAviao:
-    def __init__(self, controlador_sistema=None):
+    def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_aviao = TelaAviao()
         self.__avioes: list[Aviao] = []
