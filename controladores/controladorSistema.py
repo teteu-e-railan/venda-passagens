@@ -1,4 +1,5 @@
 from telas.telaSistema import TelaSistema
+from controladores.controladorAviao import ControladorAviao
 from controladores.controladorPassageiro import ControladorPassageiro
 
 
@@ -9,7 +10,7 @@ class ControladorSistema:
         self.__controlador_passageiros = ControladorPassageiro(self)
         self.__controlador_tripulantes = None
         self.__controlador_voos = None
-        self.__controlador_avioes = None
+        self.__controlador_avioes = ControladorAviao(self)
 
     @property
     def controlador_reservas(self):
@@ -43,7 +44,7 @@ class ControladorSistema:
             2: self.controlador_passageiros.abre_tela,
             3: self.controlador_tripulantes,
             4: self.controlador_voos,
-            5: self.controlador_avioes,
+            5: self.controlador_avioes.abre_tela,
             0: self.finaliza_sistema,
         }
 
