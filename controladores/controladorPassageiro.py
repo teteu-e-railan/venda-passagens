@@ -53,6 +53,7 @@ class ControladorPassageiro:
 
         if passageiro is None:
             self.__tela_passageiro.mostra_mensagem("Nome não encontrado!!!")
+
         else:
             self.__tela_passageiro.mostra_passageiro(
                 {
@@ -62,19 +63,28 @@ class ControladorPassageiro:
                     "Telefone": passageiro.telefone,
                 }
             )
+
             if self.__tela_passageiro.confirma_opcao(
                 "Deseja realmente alterar este passageiro?"
             ):
-                dados_passageiro = self.__tela_passageiro.altera_dados_passageiro(
-                    passageiro
-                )
-                passageiro.nome = dados_passageiro["nome"]
-                passageiro.cpf = dados_passageiro["cpf"]
-                passageiro.idade = dados_passageiro["idade"]
-                passageiro.telefone = dados_passageiro["telefone"]
+                dados_passageiro = self.__tela_passageiro.altera_dados_passageiro()
+
+                if dados_passageiro["nome"]:
+                    passageiro.nome = dados_passageiro["nome"]
+
+                if dados_passageiro["cpf"]:
+                    passageiro.cpf = dados_passageiro["cpf"]
+
+                if dados_passageiro["idade"]:
+                    passageiro.idade = dados_passageiro["idade"]
+
+                if dados_passageiro["telefone"]:
+                    passageiro.telefone = dados_passageiro["telefone"]
+
                 self.__tela_passageiro.mostra_mensagem(
-                    "Cadastro alterado com sucesso!!!"
+                    "Passageiro alterado com sucesso!!!"
                 )
+
             else:
                 self.__tela_passageiro.mostra_mensagem(
                     "Alteração de passageiro cancelada!!!"

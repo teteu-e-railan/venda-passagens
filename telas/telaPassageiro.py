@@ -63,16 +63,47 @@ class TelaPassagerio(AbstractTela):
         }
 
     # incluir def de alteração de dados*
-    def altera_dados_passageiro(self, passageiro):
+    def altera_dados_passageiro(self):
         print("-------- DADOS PASSAGEIRO ----------")
+
         while True:
-            nome = input("Nome: ").title().strip() or passageiro.nome
+            nome = input("Nome: ").title().strip()
 
-            cpf = input("CPF: ").strip() or passageiro.cpf
+            while True:
+                cpf = input("CPF: ").strip()
 
-            idade = int(input("Idade: ").strip()) or passageiro.idade
+                if not cpf:
+                    break
 
-            telefone = int((input("Telefone: ")).strip()) or passageiro.telefone
+                try:
+                    int(cpf)
+                    break
+                except ValueError:
+                    print("O CPF deve ser composto apenas por números!")
+
+            while True:
+                idade = input("Idade: ").strip()
+
+                if not idade:
+                    break
+
+                try:
+                    idade = int(idade)
+                    break
+                except ValueError:
+                    print("A idade deve ser composta apenas por números!")
+
+            while True:
+                telefone = input("Telefone: ").strip()
+
+                if not telefone:
+                    break
+
+                try:
+                    telefone = int(telefone)
+                    break
+                except ValueError:
+                    print("O Telefone deve ser composto apenas por números!")
 
             return {
                 "nome": nome,
@@ -81,9 +112,10 @@ class TelaPassagerio(AbstractTela):
                 "telefone": telefone,
             }
 
-    def mostra_passageiro(self, dados_passageiro: dict[str, str | int]):
+    def mostra_passageiro(self, dados_passageiro: "dict[str, str | int]"):
         for index, valor in dados_passageiro.items():
             print(f" {index} : {valor} ")
+
         print("\n")
 
     def mostra_nome(self, passageiros: list):
