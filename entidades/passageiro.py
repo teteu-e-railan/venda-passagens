@@ -1,4 +1,4 @@
-from abstractPessoa import Pessoa
+from entidades.abstractPessoa import Pessoa
 
 
 class Passageiro(Pessoa):
