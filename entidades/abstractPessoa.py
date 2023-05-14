@@ -1,18 +1,20 @@
 from abc import ABC, abstractmethod
+
+
 class Pessoa(ABC):
     @abstractmethod
-    def __init__(self, cpf: int, nome: str, telefone: int, idade: int):
+    def __init__(self, nome: str, cpf: str, idade: int, telefone: int):
         self.__cpf = cpf
         self.__nome = nome
-        self.__telefone = telefone
         self.__idade = idade
+        self.__telefone = telefone
 
     @property
     def cpf(self):
         return self.__cpf
 
     @cpf.setter
-    def cpf(self, cpf: int):
+    def cpf(self, cpf: str):
         self.__cpf = cpf
 
     @property
