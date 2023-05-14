@@ -52,7 +52,7 @@ class ControladorPassageiro:
         passageiro = self.buscar_passageiro_por_cpf(cpf)
 
         if passageiro is None:
-            self.__tela_passageiro.mostra_mensagem("Nome não encontrado!!!")
+            self.__tela_passageiro.mostra_mensagem("Passageiro não encontrado!!!")
 
         else:
             self.__tela_passageiro.mostra_passageiro(
@@ -97,10 +97,10 @@ class ControladorPassageiro:
             for passageiro in self.__passageiros:
                 self.__tela_passageiro.mostra_passageiro(
                     {
-                        "nome": passageiro.nome,
-                        "cpf": passageiro.cpf,
-                        "idade": passageiro.idade,
-                        "telefone": passageiro.telefone,
+                        "Nome": passageiro.nome,
+                        "CPF": passageiro.cpf,
+                        "Idade": passageiro.idade,
+                        "Telefone": passageiro.telefone,
                     }
                 )
 
@@ -135,7 +135,7 @@ class ControladorPassageiro:
 
             else:
                 opcao = self.__tela_passageiro.confirma_opcao(
-                    "Nome não encontrado. Deseja buscar outro? "
+                    "Passageiro não encontrado. Deseja buscar outro? "
                 )
                 if not opcao:
                     break

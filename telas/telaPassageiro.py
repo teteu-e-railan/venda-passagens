@@ -31,10 +31,11 @@ class TelaPassagerio(AbstractTela):
 
         while True:
             cpf = input("CPF: ").strip()
-            if cpf:
+            try:
+                int(cpf)
                 break
 
-            else:
+            except ValueError:
                 print("Dado invalido, digite novamente!!!")
         while True:
             idade = input("Idade: ").strip()
@@ -49,10 +50,10 @@ class TelaPassagerio(AbstractTela):
                 print("Dado invalido, digite novamente!!!")
         while True:
             telefone = input("Telefone: ").strip()
-            if telefone:
+            try:
+                telefone = int(telefone)
                 break
-
-            else:
+            except ValueError:
                 print("Dado invalido, digite novamente!!!")
 
         return {
