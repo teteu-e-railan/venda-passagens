@@ -23,7 +23,7 @@ class ControladorPassageiro:
 
             try:
                 for passageiro in self.__passageiros:
-                    if passageiro.nome == dados_passageiro["nome"]:
+                    if passageiro.cpf == dados_passageiro["cpf"]:
                         raise PassageiroJahExisteException
 
                 novo_passageiro = Passageiro(
@@ -47,7 +47,7 @@ class ControladorPassageiro:
                 break
 
     def alterar_passageiro(self):
-        self.listar_passageiros()
+        self.listar_passageiros_nome_cpf()
         cpf = self.__tela_passageiro.seleciona_passageiro_por_cpf()
         passageiro = self.buscar_passageiro_por_cpf(cpf)
 
@@ -104,9 +104,18 @@ class ControladorPassageiro:
                     }
                 )
 
+    def listar_passageiros_nome_cpf(self):
+        for passageiro in self.__passageiros:
+            self.__tela_passageiro.mostra_passageiro(
+                {
+                    "Passageiro": passageiro.nome,
+                    "CPF": passageiro.cpf,
+                }
+            )
+
     def excluir_passageiro(self):
         while True:
-            self.__tela_passageiro.mostra_nome(self.__passageiros)
+            self.listar_passageiros_nome_cpf()
             cpf_passageiro = self.__tela_passageiro.seleciona_passageiro_por_cpf()
             passageiro = self.buscar_passageiro_por_cpf(cpf_passageiro)
 
