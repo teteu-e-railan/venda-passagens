@@ -1,12 +1,13 @@
 from telas.telaSistema import TelaSistema
 from controladores.controladorAviao import ControladorAviao
+from controladores.controladorPassageiro import ControladorPassageiro
 
 
 class ControladorSistema:
     def __init__(self) -> None:
         self.__tela_sistema = TelaSistema()
         self.__controlador_reservas = None
-        self.__controlador_passageiros = None
+        self.__controlador_passageiros = ControladorPassageiro(self)
         self.__controlador_tripulantes = None
         self.__controlador_voos = None
         self.__controlador_avioes = ControladorAviao(self)
@@ -40,7 +41,7 @@ class ControladorSistema:
     def abre_tela(self):
         opcoes_controlador = {
             1: self.controlador_reservas,
-            2: self.controlador_passageiros,
+            2: self.controlador_passageiros.abre_tela,
             3: self.controlador_tripulantes,
             4: self.controlador_voos,
             5: self.controlador_avioes.abre_tela,
