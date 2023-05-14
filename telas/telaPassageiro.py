@@ -22,7 +22,7 @@ class TelaPassagerio(AbstractTela):
     def pega_dados_passageiro(self):
         print("-------- DADOS PASSAGEIRO ----------")
         while True:
-            nome = input("Nome: ").upper().strip()
+            nome = input("Nome: ").title().strip()
             if nome:
                 break
 
@@ -32,12 +32,8 @@ class TelaPassagerio(AbstractTela):
         while True:
             cpf = input("CPF: ").strip()
             if cpf:
-                try:
-                    cpf = int(cpf)
-                    break
+                break
 
-                except ValueError:
-                    print("Dado invalido, digite novamente!!!")
             else:
                 print("Dado invalido, digite novamente!!!")
         while True:
@@ -54,12 +50,8 @@ class TelaPassagerio(AbstractTela):
         while True:
             telefone = input("Telefone: ").strip()
             if telefone:
-                try:
-                    telefone = int(telefone)
-                    break
+                break
 
-                except ValueError:
-                    print("Dado invalido, digite novamente!!!")
             else:
                 print("Dado invalido, digite novamente!!!")
 
@@ -70,16 +62,29 @@ class TelaPassagerio(AbstractTela):
             "telefone": telefone,
         }
 
-    def mostra_passageiro(self, dados_passageiro):
-        nome = dados_passageiro["nome"]
-        cpf = dados_passageiro["cpf"]
-        idade = dados_passageiro["idade"]
-        telefone = dados_passageiro["telefone"]
+    # incluir def de alteração de dados*
+    def altera_dados_passageiro(self, passageiro):
+        print("-------- DADOS PASSAGEIRO ----------")
+        while True:
+            nome = input("Nome: ").title().strip() or passageiro.nome
 
-        print(f"Nome do Passageiro: {nome}")
-        print(f"Documento: {cpf}.")
-        print(f"Idade: {idade}.")
-        print(f"Telefone: {telefone}.")
+            cpf = input("CPF: ").strip() or passageiro.cpf
+
+            idade = int(input("Idade: ").strip()) or passageiro.idade
+
+            telefone = int((input("Telefone: ")).strip()) or passageiro.telefone
+
+            return {
+                "nome": nome,
+                "cpf": cpf,
+                "idade": idade,
+                "telefone": telefone,
+            }
+
+    def mostra_passageiro(self, dados_passageiro: dict[str, str | int]):
+        for index, valor in dados_passageiro.items():
+            print(f" {index} : {valor} ")
+        print("\n")
 
     def mostra_nome(self, passageiros: list):
         print("Passageiros Cadastrados: ")
@@ -87,9 +92,9 @@ class TelaPassagerio(AbstractTela):
             print(passageiro.nome)
         print("\n")
 
-    def seleciona_passageiro(self):
-        nome = input("nome do passageiro que deseja selecionar: ").upper().strip()
-        return nome
+    def seleciona_passageiro_por_cpf(self):
+        cpf = input("CPF do passageiro que deseja selecionar: ").strip()
+        return cpf
 
     def confirma_opcao(self, mensagem: str) -> bool:
         while True:
