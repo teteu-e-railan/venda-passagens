@@ -9,9 +9,9 @@ class ControladorPassageiro:
         self.__tela_passageiro = TelaPassagerio()
         self.__passageiros: list[Passageiro] = []
 
-    def buscar_passageiro_por_nome(self, nome):
+    def buscar_passageiro_por_cpf(self, cpf):
         for passageiro in self.__passageiros:
-            if passageiro.nome == nome:
+            if passageiro.cpf == cpf:
                 return passageiro
         return None
 
@@ -47,25 +47,27 @@ class ControladorPassageiro:
                 break
 
     def alterar_passageiro(self):
-        self.__tela_passageiro.mostra_nome(self.__passageiros)
-        nome = self.__tela_passageiro.seleciona_passageiro()
-        passageiro = self.buscar_passageiro_por_nome(nome)
+        self.listar_passageiros()
+        cpf = self.__tela_passageiro.seleciona_passageiro_por_cpf()
+        passageiro = self.buscar_passageiro_por_cpf(cpf)
 
         if passageiro is None:
             self.__tela_passageiro.mostra_mensagem("Nome não encontrado!!!")
         else:
             self.__tela_passageiro.mostra_passageiro(
                 {
-                    "nome": passageiro.nome,
-                    "cpf": passageiro.cpf,
-                    "idade": passageiro.idade,
-                    "telefone": passageiro.telefone,
+                    "Nome": passageiro.nome,
+                    "Cpf": passageiro.cpf,
+                    "Idade": passageiro.idade,
+                    "Telefone": passageiro.telefone,
                 }
             )
             if self.__tela_passageiro.confirma_opcao(
                 "Deseja realmente alterar este passageiro?"
             ):
-                dados_passageiro = self.__tela_passageiro.pega_dados_passageiro()
+                dados_passageiro = self.__tela_passageiro.altera_dados_passageiro(
+                    passageiro
+                )
                 passageiro.nome = dados_passageiro["nome"]
                 passageiro.cpf = dados_passageiro["cpf"]
                 passageiro.idade = dados_passageiro["idade"]
@@ -95,8 +97,8 @@ class ControladorPassageiro:
     def excluir_passageiro(self):
         while True:
             self.__tela_passageiro.mostra_nome(self.__passageiros)
-            nome_passageiro = self.__tela_passageiro.seleciona_passageiro()
-            passageiro = self.buscar_passageiro_por_nome(nome_passageiro)
+            cpf_passageiro = self.__tela_passageiro.seleciona_passageiro_por_cpf()
+            passageiro = self.buscar_passageiro_por_cpf(cpf_passageiro)
 
             if passageiro is not None:
                 if self.__tela_passageiro.confirma_opcao(
@@ -104,7 +106,7 @@ class ControladorPassageiro:
                 ):
                     self.__passageiros.remove(passageiro)
                     self.__tela_passageiro.mostra_mensagem(
-                        f"Passageiro {nome_passageiro} excluído com sucesso!!!"
+                        "Passageiro excluído com sucesso!!!"
                     )
                 else:
                     self.__tela_passageiro.mostra_mensagem(
