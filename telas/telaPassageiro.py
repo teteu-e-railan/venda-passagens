@@ -13,12 +13,19 @@ class TelaPassagerio(AbstractTela):
             }
         )
 
+    def tela_opcoes(self):
+        print("-------- Passageiro ----------")
+        for index, opcao in self.opcoes.items():
+            print(f"{index} - {opcao}")
+        return self.verifica_opcao("Escolha uma opção: ")
+
     def pega_dados_passageiro(self):
         print("-------- DADOS PASSAGEIRO ----------")
         while True:
             nome = input("Nome: ").upper().strip()
             if nome:
                 break
+
             else:
                 print("Dado invalido, digite novamente!!!")
 
@@ -28,6 +35,7 @@ class TelaPassagerio(AbstractTela):
                 try:
                     cpf = int(cpf)
                     break
+
                 except ValueError:
                     print("Dado invalido, digite novamente!!!")
             else:
@@ -38,6 +46,7 @@ class TelaPassagerio(AbstractTela):
                 try:
                     idade = int(idade)
                     break
+
                 except ValueError:
                     print("Dado invalido, digite novamente!!!")
             else:
@@ -48,6 +57,7 @@ class TelaPassagerio(AbstractTela):
                 try:
                     telefone = int(telefone)
                     break
+
                 except ValueError:
                     print("Dado invalido, digite novamente!!!")
             else:
@@ -60,19 +70,19 @@ class TelaPassagerio(AbstractTela):
             "telefone": telefone,
         }
 
-    def mostra_aviao(self, dados_passageiro):
+    def mostra_passageiro(self, dados_passageiro):
         nome = dados_passageiro["nome"]
         cpf = dados_passageiro["cpf"]
         idade = dados_passageiro["idade"]
         telefone = dados_passageiro["telefone"]
 
-        print(f"nome do Avião: {nome}")
+        print(f"Nome do Passageiro: {nome}")
         print(f"Documento: {cpf}.")
         print(f"Idade: {idade}.")
         print(f"Telefone: {telefone}.")
 
     def mostra_nome(self, passageiros: list):
-        print("Aviões disponíveis: ")
+        print("Passageiros Cadastrados: ")
         for passageiro in passageiros:
             print(passageiro.nome)
         print("\n")
@@ -82,8 +92,11 @@ class TelaPassagerio(AbstractTela):
         return nome
 
     def confirma_opcao(self, mensagem: str) -> bool:
-        opcao = input(mensagem + " (S/N) ").upper().strip()
-        while opcao not in ["S", "N"]:
-            print("Opção inválida!")
-            opcao = input(mensagem + " (S/N) ").upper().strip()
-        return opcao == "S"
+        while True:
+            try:
+                opcao = input(mensagem + " (S/N) ").upper().strip()
+                if opcao not in ["S", "N"]:
+                    raise Exception
+                return opcao == "S"
+            except Exception:
+                print("Opção inválida!")
