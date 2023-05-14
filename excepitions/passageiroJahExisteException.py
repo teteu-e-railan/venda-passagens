@@ -1,3 +1,3 @@
-class AviaoJahExisteException(Exception):
+class PassageiroJahExisteException(Exception):
     def __init__(self):
-        super().__init__("Avião já existe!")
+        super().__init__("Passageiro já existe!")
