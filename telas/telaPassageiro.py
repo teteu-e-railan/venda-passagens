@@ -118,12 +118,6 @@ class TelaPassagerio(AbstractTela):
 
         print("\n")
 
-    def mostra_nome(self, passageiros: list):
-        print("Passageiros Cadastrados: ")
-        for passageiro in passageiros:
-            print(passageiro.nome)
-        print("\n")
-
     def seleciona_passageiro_por_cpf(self):
         cpf = input("CPF do passageiro que deseja selecionar: ").strip()
         return cpf
