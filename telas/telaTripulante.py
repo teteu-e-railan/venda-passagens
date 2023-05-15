@@ -135,13 +135,3 @@ class TelaTripulante(AbstractTela):
     def seleciona_tripulante_por_cpf(self):
         cpf = input("CPF do tripulante que deseja selecionar: ").strip()
         return cpf
-
-    def confirma_opcao(self, mensagem: str) -> bool:
-        while True:
-            try:
-                opcao = input(mensagem + " (S/N) ").upper().strip()
-                if opcao not in ["S", "N"]:
-                    raise Exception
-                return opcao == "S"
-            except Exception:
-                print("Opção inválida!")

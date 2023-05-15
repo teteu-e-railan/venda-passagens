@@ -37,19 +37,19 @@ class ControladorVoo:
                 ):
                     raise Exception("Esse Voo já existe!")
 
+            novo_voo = Voo(
+                dados_voo["partida"],
+                dados_voo["destino"],
+                dados_voo["data_do_voo"],
+                aviao,
+            )
+
+            self.voos.append(novo_voo)
+            self.__tela_voo.mostra_mensagem("Voo cadastrado com sucesso!")
+
         except Exception as e:
             self.__tela_voo.mostra_mensagem(str(e))
             return
-
-        novo_voo = Voo(
-            dados_voo["partida"],
-            dados_voo["destino"],
-            dados_voo["data_do_voo"],
-            aviao,
-        )
-
-        self.voos.append(novo_voo)
-        self.__tela_voo.mostra_mensagem("Voo cadastrado com sucesso!")
 
     def alterar_voo(self):
         self.listar_voos()

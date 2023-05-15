@@ -121,13 +121,3 @@ class TelaPassagerio(AbstractTela):
     def seleciona_passageiro_por_cpf(self):
         cpf = input("CPF do passageiro que deseja selecionar: ").strip()
         return cpf
-
-    def confirma_opcao(self, mensagem: str) -> bool:
-        while True:
-            try:
-                opcao = input(mensagem + " (S/N) ").upper().strip()
-                if opcao not in ["S", "N"]:
-                    raise Exception
-                return opcao == "S"
-            except Exception:
-                print("Opção inválida!")
