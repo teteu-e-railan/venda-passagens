@@ -104,6 +104,7 @@ class ControladorVoo:
         if voo:
             self.voos.remove(voo)
             self.__tela_voo.mostra_mensagem("Voo excluído com sucesso!")
+
         else:
             self.__tela_voo.mostra_mensagem("ATENCAO: Voo não encontrado!")
 
