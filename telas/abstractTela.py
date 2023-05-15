@@ -36,9 +36,8 @@ class AbstractTela(ABC):
         tenta-se receber um input.
         """
         while True:
-            opcao_selecionada = int(input(mensagem))
-
             try:
+                opcao_selecionada = int(input(mensagem))
                 if opcao_selecionada not in self.lista_de_opcoes_validas:
                     raise ValueError
 

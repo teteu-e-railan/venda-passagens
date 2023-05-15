@@ -21,9 +21,33 @@ class TelaAviao(AbstractTela):
 
     def pega_dados_aviao(self):
         print("-------- DADOS AVIÃO ----------")
-        modelo = input("Modelo: ").upper()
-        fileiras = int(input("Fileiras: "))
-        assentos_por_fileira = int(input("Assentos por fileira: "))
+        while True:
+            modelo = input("Modelo: ").upper().strip()
+            if modelo:
+                break
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            fileiras = input("Fileiras: ").strip()
+            if fileiras:
+                try:
+                    fileiras = int(fileiras)
+                    break
+                except ValueError:
+                    print("Dado invalido, digite novamente!!!")
+            else:
+                print("Dado invalido, digite novamente!!!")
+        while True:
+            assentos_por_fileira = input("Assentos por fileira: ").strip()
+            if assentos_por_fileira:
+                try:
+                    assentos_por_fileira = int(assentos_por_fileira)
+                    break
+                except ValueError:
+                    print("Dado invalido, digite novamente!!!")
+            else:
+                print("Dado invalido, digite novamente!!!")
 
         return {
             "modelo": modelo,
@@ -32,11 +56,26 @@ class TelaAviao(AbstractTela):
         }
 
     def mostra_aviao(self, dados_aviao):
-        print("Modelo do Avião: ", dados_aviao["modelo"])
-        print("fileiras: ", dados_aviao["fileiras"])
-        print("assentos por fileira: ", dados_aviao["assentos_por_fileira"])
+        modelo = dados_aviao["modelo"]
+        fileiras = dados_aviao["fileiras"]
+        assentos_por_fileira = dados_aviao["assentos_por_fileira"]
+
+        print(f"Modelo do Avião: {modelo}")
+        print(f"Capacidade: {assentos_por_fileira * fileiras} Passageiros.\n")
+
+    def mostra_modelo(self, avioes: list):
+        print("Aviões disponíveis: ")
+        for aviao in avioes:
+            print(aviao.modelo)
         print("\n")
 
     def seleciona_aviao(self):
-        modelo = input("Modelo do avião que deseja selecionar: ").upper()
+        modelo = input("Modelo do avião que deseja selecionar: ").upper().strip()
         return modelo
+
+    def confirma_opcao(self, mensagem: str) -> bool:
+        opcao = input(mensagem + " (S/N) ").upper().strip()
+        while opcao not in ["S", "N"]:
+            print("Opção inválida!")
+            opcao = input(mensagem + " (S/N) ").upper().strip()
+        return opcao == "S"

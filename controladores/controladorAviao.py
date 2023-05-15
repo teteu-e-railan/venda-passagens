@@ -25,8 +25,10 @@ class ControladorAviao:
         return None
 
     def incluir_aviao(self):
-        dados_aviao = self.__tela_aviao.pega_dados_aviao()
-        if dados_aviao is not None:
+        while True:
+            dados_aviao = self.__tela_aviao.pega_dados_aviao()
+            if dados_aviao is None:
+                break
             try:
                 for aviao in self.__avioes:
                     if aviao.modelo == dados_aviao["modelo"]:
@@ -37,22 +39,19 @@ class ControladorAviao:
                     dados_aviao["assentos_por_fileira"],
                 )
                 self.__avioes.append(novo_aviao)
-            except Exception:
-                pass
+                self.__tela_aviao.mostra_mensagem("Avião cadastrado com sucesso!!!")
+            except AviaoJahExisteException:
+                self.__tela_aviao.mostra_mensagem("ATENÇÃO: Avião já existe!!!")
+            if not self.__tela_aviao.confirma_opcao("Deseja cadastrar outro avião?"):
+                break
 
     def alterar_aviao(self):
+        self.__tela_aviao.mostra_modelo(self.__avioes)
         modelo = self.__tela_aviao.seleciona_aviao()
         aviao = self.buscar_aviao_por_modelo(modelo)
         if aviao is None:
-            self.__tela_aviao.mostra_mensagem("Avião não encontrado!!!")
+            self.__tela_aviao.mostra_mensagem("Modelo não encontrado!!!")
         else:
-            dados_aviao = self.__tela_aviao.pega_dados_aviao()
-            aviao.modelo = dados_aviao["modelo"]
-            aviao.fileiras = dados_aviao["fileiras"]
-            aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
-
-    def listar_avioes(self):
-        for aviao in self.__avioes:
             self.__tela_aviao.mostra_aviao(
                 {
                     "modelo": aviao.modelo,
@@ -60,18 +59,51 @@ class ControladorAviao:
                     "assentos_por_fileira": aviao.assentos_por_fileira,
                 }
             )
+            if self.__tela_aviao.confirma_opcao("Deseja realmente alterar este avião?"):
+                dados_aviao = self.__tela_aviao.pega_dados_aviao()
+                aviao.modelo = dados_aviao["modelo"]
+                aviao.fileiras = dados_aviao["fileiras"]
+                aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
+                self.__tela_aviao.mostra_mensagem("Cadastro alterado com sucesso!!!")
+            else:
+                self.__tela_aviao.mostra_mensagem("Alteração de avião cancelada!!!")
+
+    def listar_avioes(self):
+        if not self.__avioes:
+            self.__tela_aviao.mostra_mensagem("Nenhum avião cadastrado!!!")
+        else:
+            for aviao in self.__avioes:
+                self.__tela_aviao.mostra_aviao(
+                    {
+                        "modelo": aviao.modelo,
+                        "fileiras": aviao.fileiras,
+                        "assentos_por_fileira": aviao.assentos_por_fileira,
+                    }
+                )
 
     def excluir_aviao(self):
-        self.listar_avioes()
-        modelo_aviao = self.__tela_aviao.seleciona_aviao()
-        aviao = self.buscar_aviao_por_modelo(modelo_aviao)
+        while True:
+            self.__tela_aviao.mostra_modelo(self.__avioes)
+            modelo_aviao = self.__tela_aviao.seleciona_aviao()
+            aviao = self.buscar_aviao_por_modelo(modelo_aviao)
 
-        if aviao is not None:
-            self.__avioes.remove(aviao)
-            self.listar_avioes()
-        else:
-            self.__tela_aviao.mostra_mensagem("ATENCAO: aviao não existente")
-        # INCLUIR UMA MENSAGEM DE SUCESSO E O MODELO DE AVIÃO QUE FOI EXCLUIDO.
+            if aviao is not None:
+                if self.__tela_aviao.confirma_opcao(
+                    "Deseja realmente excluir este avião?"
+                ):
+                    self.__avioes.remove(aviao)
+                    self.__tela_aviao.mostra_mensagem(
+                        f"Avião {modelo_aviao} excluído com sucesso!!!"
+                    )
+                else:
+                    self.__tela_aviao.mostra_mensagem("Exclusão de avião cancelada!!!")
+                break
+            else:
+                opcao = self.__tela_aviao.confirma_opcao(
+                    "Modelo não encontrado. Deseja buscar outro modelo? "
+                )
+                if not opcao:
+                    break
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
