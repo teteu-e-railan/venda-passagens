@@ -1,6 +1,8 @@
 from entidades.voo import Voo
 from entidades.aviao import Aviao
 from telas.telaVoo import TelaVoo
+from entidades.registro import Registro
+import datetime
 
 
 class ControladorVoo:
@@ -8,6 +10,7 @@ class ControladorVoo:
         self.__controlador_sistema = controlador_sistema
         self.__tela_voo = TelaVoo()
         self.__voos: list[Voo] = []
+        self.registros: list[Registro] = []
 
     @property
     def voos(self):
@@ -116,6 +119,18 @@ class ControladorVoo:
                 )
             )
 
+    def listar_registros(self):
+        if not self.registros:
+            self.__tela_voo.mostra_mensagem("Nenhum Registro encontrado!!!")
+        else:
+            for registro in self.registros:
+                self.__tela_voo.mostra_registro(
+                    {
+                        "Descrição": registro.descricao,
+                        "Data e Hora": registro.data,
+                    }
+                )
+
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
@@ -125,6 +140,7 @@ class ControladorVoo:
             2: self.alterar_voo,
             3: self.listar_voos,
             4: self.excluir_voo,
+            5: self.listar_registros,
             0: self.retornar,
         }
 

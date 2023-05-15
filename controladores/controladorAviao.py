@@ -1,6 +1,8 @@
 from entidades.aviao import Aviao
 from telas.telaAviao import TelaAviao
 from excepitions.aviaoJahExisteException import AviaoJahExisteException
+from entidades.registro import Registro
+import datetime
 
 
 class ControladorAviao:
@@ -8,6 +10,10 @@ class ControladorAviao:
         self.__controlador_sistema = controlador_sistema
         self.__tela_aviao = TelaAviao()
         self.__avioes: list[Aviao] = []
+        self.registros: list[Registro] = []
+
+    def adicionar_registro(self, registro):
+        self.registros.append(registro)
 
     def buscar_aviao_por_modelo(self, modelo):
         for aviao in self.__avioes:
@@ -30,6 +36,13 @@ class ControladorAviao:
                     dados_aviao["assentos_por_fileira"],
                 )
                 self.__avioes.append(novo_aviao)
+
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Inclusão de avião: {novo_aviao.modelo}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_aviao.mostra_mensagem("Avião cadastrado com sucesso!!!")
             except AviaoJahExisteException:
                 self.__tela_aviao.mostra_mensagem("ATENÇÃO: Avião já existe!!!")
@@ -67,6 +80,12 @@ class ControladorAviao:
                 if dados_aviao["assentos_por_fileira"]:
                     aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
 
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Alteração de avião: {aviao.modelo}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_aviao.mostra_mensagem("aviao alterado com sucesso!!!")
 
             else:
@@ -79,8 +98,8 @@ class ControladorAviao:
             for aviao in self.__avioes:
                 self.__tela_aviao.mostra_aviao(
                     {
-                        "modelo": aviao.modelo,
-                        "assentos_total": aviao.assentos_total,
+                        "Modelo": aviao.modelo,
+                        "Assentos total": aviao.assentos_total,
                     }
                 )
 
@@ -95,6 +114,13 @@ class ControladorAviao:
                     "Deseja realmente excluir este avião?"
                 ):
                     self.__avioes.remove(aviao)
+
+                    # Registro automático no histórico
+                    data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    descricao = f"Exclusão de avião: {aviao.modelo}"
+                    registro = Registro(data, descricao)
+                    self.adicionar_registro(registro)
+
                     self.__tela_aviao.mostra_mensagem(
                         f"Avião {modelo_aviao} excluído com sucesso!!!"
                     )
@@ -108,6 +134,18 @@ class ControladorAviao:
                 if not opcao:
                     break
 
+    def listar_registros(self):
+        if not self.registros:
+            self.__tela_aviao.mostra_mensagem("Nenhum Registro encontrado!!!")
+        else:
+            for registro in self.registros:
+                self.__tela_aviao.mostra_registro(
+                    {
+                        "Descrição": registro.descricao,
+                        "Data e Hora": registro.data,
+                    }
+                )
+
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
@@ -117,6 +155,7 @@ class ControladorAviao:
             2: self.alterar_aviao,
             3: self.listar_avioes,
             4: self.excluir_aviao,
+            5: self.listar_registros,
             0: self.retornar,
         }
         while True:

@@ -1,3 +1,4 @@
+import datetime
 from telas.telaSistema import TelaSistema
 from controladores.controladorAviao import ControladorAviao
 from controladores.controladorPassageiro import ControladorPassageiro
