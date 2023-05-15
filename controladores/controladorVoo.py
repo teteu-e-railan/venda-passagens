@@ -23,9 +23,6 @@ class ControladorVoo:
 
     def incluir_voo(self):
         dados_voo = self.__tela_voo.pega_dados_voo()
-
-        # TODO Verificar se voo ja existe
-
         aviao = self.pega_aviao_por_modelo(dados_voo["modelo_aviao"])
 
         if not aviao:
