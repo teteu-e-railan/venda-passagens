@@ -57,11 +57,10 @@ class TelaAviao(AbstractTela):
 
     def mostra_aviao(self, dados_aviao):
         modelo = dados_aviao["modelo"]
-        fileiras = dados_aviao["fileiras"]
-        assentos_por_fileira = dados_aviao["assentos_por_fileira"]
+        capacidade = dados_aviao["assentos_total"]
 
         print(f"Modelo do Avião: {modelo}")
-        print(f"Capacidade: {assentos_por_fileira * fileiras} Passageiros.\n")
+        print(f"Capacidade: {capacidade} Passageiros.\n")
 
     def mostra_modelo(self, avioes: list):
         print("Aviões disponíveis: ")

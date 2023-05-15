@@ -2,15 +2,6 @@ from entidades.aviao import Aviao
 from telas.telaAviao import TelaAviao
 from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
-"""
-INCLUIR OS .UPPER() EM TODOS OS IMPUTS QUE SÃO STR, TESTE 
-NOS NOME DOS PASSAGEIROS DEVE SE INCLUIR
-O .TITLE(), QUANDO FOR ALTERAR UM AVIAO DEVE SE MOSTRA OS DADOS
-QUE FORAM ALTERADOS E UMA MENSGAEM DE SUCESSO!
-FALTA INCLUIR UMA MENSAGEM DE QUANDO O AVIAO JA EXISTE DENTRO DA LISTA
-
-"""
-
 
 class ControladorAviao:
     def __init__(self, controlador_sistema):
@@ -78,6 +69,7 @@ class ControladorAviao:
                         "modelo": aviao.modelo,
                         "fileiras": aviao.fileiras,
                         "assentos_por_fileira": aviao.assentos_por_fileira,
+                        "assentos_total": aviao.assentos_total,
                     }
                 )
 
