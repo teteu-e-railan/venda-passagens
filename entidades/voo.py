@@ -57,3 +57,5 @@ class Voo:
     def data_do_voo(self, data_do_voo: str):
         self.__data_do_voo = date.fromisoformat(data_do_voo)
 
+    def reservar_assento(self, fileira: int, assento_fileira: int):
+        self.assentos[fileira][assento_fileira] = "X"
