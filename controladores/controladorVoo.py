@@ -48,6 +48,7 @@ class ControladorVoo:
         )
 
         self.voos.append(novo_voo)
+        self.__tela_voo.mostra_mensagem("Voo cadastrado com sucesso!")
 
     def alterar_voo(self):
         codigo_voo = self.__tela_voo.seleciona_voo()
@@ -67,6 +68,8 @@ class ControladorVoo:
 
             if dados_voo["data_do_voo"]:
                 voo.data_do_voo = dados_voo["data_do_voo"]
+
+            self.__tela_voo.mostra_mensagem("Voo alterado com sucesso!")
 
     def listar_voos(self):
         for voo in self.voos:
