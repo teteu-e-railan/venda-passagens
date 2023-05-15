@@ -1,10 +1,9 @@
 from entidades.voo import Voo
 from telas.telaVoo import TelaVoo
-from controladores.controladorSistema import ControladorSistema
 
 
 class ControladorVoo:
-    def __init__(self, controlador_sistema: ControladorSistema):
+    def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_voo = TelaVoo()
         self.__voos: list[Voo] = []
@@ -78,8 +77,8 @@ class ControladorVoo:
                     "Codigo": voo.codigo,
                     "Partida": voo.partida,
                     "Destino": voo.destino,
-                    "Data": voo.data_do_voo,
-                    "Aviao": voo.aviao.modelo,
+                    "Data": voo.data_do_voo.strftime("%d/%m/%Y"),
+                    "Modelo do Avião": voo.aviao.modelo,
                 }
             )
 

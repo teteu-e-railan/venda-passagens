@@ -1,4 +1,5 @@
-from typing import TypedDict
+from typing import TypedDict, Literal
+from datetime import datetime
 from telas.abstractTela import AbstractTela
 from helpers.verifica_data import verifica_data
 
@@ -6,14 +7,14 @@ from helpers.verifica_data import verifica_data
 class DadosIncluiVoo(TypedDict):
     partida: str
     destino: str
-    data_do_voo: str
+    data_do_voo: datetime
     modelo_aviao: str
 
 
 class DadosAlteraVoo(TypedDict):
     partida: str
     destino: str
-    data_do_voo: str
+    data_do_voo: "datetime | Literal['']"
 
 
 class TelaVoo(AbstractTela):
@@ -60,7 +61,7 @@ class TelaVoo(AbstractTela):
             data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
 
             try:
-                verifica_data(data_do_voo)
+                data_do_voo = verifica_data(data_do_voo)
                 break
 
             except ValueError:
@@ -87,29 +88,17 @@ class TelaVoo(AbstractTela):
     def pega_dados_altera_voo(self) -> DadosAlteraVoo:
         print("-------- DADOS VOO ----------")
 
-        while True:
-            partida = input("Local de partida do Voo: ").upper().strip()
-
-            if partida:
-                break
-
-            else:
-                print("Dado invalido, digite novamente!!!")
-
-        while True:
-            destino = input("Local de destino do Voo: ").upper().strip()
-
-            if destino:
-                break
-
-            else:
-                print("Dado invalido, digite novamente!!!")
+        partida = input("Local de partida do Voo: ").upper().strip()
+        destino = input("Local de destino do Voo: ").upper().strip()
 
         while True:
             data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
 
+            if not data_do_voo:
+                break
+
             try:
-                verifica_data(data_do_voo)
+                data_do_voo = verifica_data(data_do_voo)
                 break
 
             except Exception:
