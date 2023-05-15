@@ -71,13 +71,3 @@ class TelaAviao(AbstractTela):
     def seleciona_aviao(self):
         modelo = input("Modelo do avião que deseja selecionar: ").upper().strip()
         return modelo
-
-    def confirma_opcao(self, mensagem: str) -> bool:
-        while True:
-            try:
-                opcao = input(mensagem + " (S/N) ").upper().strip()
-                if opcao not in ["S", "N"]:
-                    raise Exception
-                return opcao == "S"
-            except Exception:
-                print("Opção inválida!")
