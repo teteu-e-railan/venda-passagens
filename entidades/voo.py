@@ -9,13 +9,13 @@ class Voo:
         self,
         partida: str,
         destino: str,
-        data_do_voo: date,
+        data_do_voo: str,
         aviao: Aviao,
     ):
         self.__codigo = gerar_id()
         self.__partida = partida
         self.__destino = destino
-        self.__data_do_voo = data_do_voo
+        self.__data_do_voo = date.fromisoformat(data_do_voo)
         self.__aviao = aviao
         self.__assentos = gerar_matriz_assentos(
             self.aviao.fileiras, self.aviao.assentos_por_fileira
@@ -54,5 +54,6 @@ class Voo:
         self.__destino = destino
 
     @data_do_voo.setter
-    def data_do_voo(self, data_do_voo: date):
-        self.__data_do_voo = data_do_voo
+    def data_do_voo(self, data_do_voo: str):
+        self.__data_do_voo = date.fromisoformat(data_do_voo)
+
