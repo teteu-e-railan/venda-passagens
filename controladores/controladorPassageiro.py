@@ -48,6 +48,8 @@ class ControladorPassageiro:
 
     def alterar_passageiro(self):
         self.listar_passageiros_nome_cpf()
+        if not self.__passageiros:
+            return
         cpf = self.__tela_passageiro.seleciona_passageiro_por_cpf()
         passageiro = self.buscar_passageiro_por_cpf(cpf)
 
@@ -105,13 +107,17 @@ class ControladorPassageiro:
                 )
 
     def listar_passageiros_nome_cpf(self):
-        for passageiro in self.__passageiros:
-            self.__tela_passageiro.mostra_passageiro(
-                {
-                    "Passageiro": passageiro.nome,
-                    "CPF": passageiro.cpf,
-                }
-            )
+        if not self.__passageiros:
+            self.__tela_passageiro.mostra_mensagem("Nenhum passageiro cadastrado!!!")
+
+        else:
+            for passageiro in self.__passageiros:
+                self.__tela_passageiro.mostra_passageiro(
+                    {
+                        "Passageiro": passageiro.nome,
+                        "CPF": passageiro.cpf,
+                    }
+                )
 
     def excluir_passageiro(self):
         while True:

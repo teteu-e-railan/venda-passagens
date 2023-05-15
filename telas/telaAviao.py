@@ -55,12 +55,45 @@ class TelaAviao(AbstractTela):
             "assentos_por_fileira": assentos_por_fileira,
         }
 
-    def mostra_aviao(self, dados_aviao):
-        modelo = dados_aviao["modelo"]
-        capacidade = dados_aviao["assentos_total"]
+    def altera_dados_aviao(self):
+        print("-------- DADOS PASSAGEIRO ----------")
 
-        print(f"Modelo do Avião: {modelo}")
-        print(f"Capacidade: {capacidade} Passageiros.\n")
+        while True:
+            modelo = input("modelo: ").upper().strip()
+
+            while True:
+                fileiras = input("fileiras: ").strip()
+
+                if not fileiras:
+                    break
+
+                try:
+                    fileiras = int(fileiras)
+                    break
+                except ValueError:
+                    print("O fileiras deve ser composto apenas por números!")
+
+            while True:
+                assentos_por_fileira = input("assentos_por_fileira: ").strip()
+
+                if not assentos_por_fileira:
+                    break
+
+                try:
+                    assentos_por_fileira = int(assentos_por_fileira)
+                    break
+                except ValueError:
+                    print("Assentos por fileira deve ser composta apenas por números!")
+
+            return {
+                "modelo": modelo,
+                "fileiras": fileiras,
+                "assentos_por_fileira": assentos_por_fileira,
+            }
+
+    def mostra_aviao(self, dados_aviao: "dict[str, str | int]"):
+        for index, valor in dados_aviao.items():
+            print(f" {index} : {valor} ")
 
     def mostra_modelo(self, avioes: list):
         print("Aviões disponíveis: ")

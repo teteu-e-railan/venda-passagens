@@ -49,6 +49,9 @@ class ControladorTripulante:
 
     def alterar_tripulante(self):
         self.listar_tripulantes_nome_cpf_cargo()
+        if not self.__tripulantes:
+            return
+
         cpf = self.__tela_tripulante.seleciona_tripulante_por_cpf()
         tripulante = self.buscar_tripulante_por_cpf(cpf)
 
@@ -111,14 +114,17 @@ class ControladorTripulante:
                 )
 
     def listar_tripulantes_nome_cpf_cargo(self):
-        for tripulante in self.__tripulantes:
-            self.__tela_tripulante.mostra_tripulante(
-                {
-                    "tripulante": tripulante.nome,
-                    "CPF": tripulante.cpf,
-                    "cargo": tripulante.cargo,
-                }
-            )
+        if not self.__tripulantes:
+            self.__tela_tripulante.mostra_mensagem("Nenhum tripulante cadastrado!!!")
+        else:
+            for tripulante in self.__tripulantes:
+                self.__tela_tripulante.mostra_tripulante(
+                    {
+                        "tripulante": tripulante.nome,
+                        "CPF": tripulante.cpf,
+                        "cargo": tripulante.cargo,
+                    }
+                )
 
     def excluir_tripulante(self):
         while True:

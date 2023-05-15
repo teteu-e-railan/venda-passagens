@@ -37,27 +37,40 @@ class ControladorAviao:
                 break
 
     def alterar_aviao(self):
-        self.__tela_aviao.mostra_modelo(self.__avioes)
+        self.listar_avioes()
+        if not self.__avioes:
+            return
+
         modelo = self.__tela_aviao.seleciona_aviao()
         aviao = self.buscar_aviao_por_modelo(modelo)
+
         if aviao is None:
-            self.__tela_aviao.mostra_mensagem("Modelo não encontrado!!!")
+            self.__tela_aviao.mostra_mensagem("aviao não encontrado!!!")
+
         else:
             self.__tela_aviao.mostra_aviao(
                 {
-                    "modelo": aviao.modelo,
-                    "fileiras": aviao.fileiras,
-                    "assentos_por_fileira": aviao.assentos_por_fileira,
+                    "Modelo": aviao.modelo,
+                    "Capacidade": aviao.assentos_total,
                 }
             )
-            if self.__tela_aviao.confirma_opcao("Deseja realmente alterar este avião?"):
-                dados_aviao = self.__tela_aviao.pega_dados_aviao()
-                aviao.modelo = dados_aviao["modelo"]
-                aviao.fileiras = dados_aviao["fileiras"]
-                aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
-                self.__tela_aviao.mostra_mensagem("Cadastro alterado com sucesso!!!")
+
+            if self.__tela_aviao.confirma_opcao("Deseja realmente alterar este aviao?"):
+                dados_aviao = self.__tela_aviao.altera_dados_aviao()
+
+                if dados_aviao["modelo"]:
+                    aviao.modelo = dados_aviao["modelo"]
+
+                if dados_aviao["fileiras"]:
+                    aviao.fileiras = dados_aviao["fileiras"]
+
+                if dados_aviao["assentos_por_fileira"]:
+                    aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
+
+                self.__tela_aviao.mostra_mensagem("aviao alterado com sucesso!!!")
+
             else:
-                self.__tela_aviao.mostra_mensagem("Alteração de avião cancelada!!!")
+                self.__tela_aviao.mostra_mensagem("Alteração de aviao cancelada!!!")
 
     def listar_avioes(self):
         if not self.__avioes:
@@ -67,8 +80,6 @@ class ControladorAviao:
                 self.__tela_aviao.mostra_aviao(
                     {
                         "modelo": aviao.modelo,
-                        "fileiras": aviao.fileiras,
-                        "assentos_por_fileira": aviao.assentos_por_fileira,
                         "assentos_total": aviao.assentos_total,
                     }
                 )

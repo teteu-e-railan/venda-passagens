@@ -63,7 +63,6 @@ class TelaPassagerio(AbstractTela):
             "telefone": telefone,
         }
 
-    # incluir def de alteração de dados*
     def altera_dados_passageiro(self):
         print("-------- DADOS PASSAGEIRO ----------")
 
