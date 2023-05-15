@@ -50,3 +50,13 @@ class AbstractTela(ABC):
     def mostra_mensagem(self, mensagem: str):
         """Mostra uma mensagem qualquer."""
         print(mensagem)
+
+    def confirma_opcao(self, mensagem: str) -> bool:
+        while True:
+            try:
+                opcao = input(mensagem + " (S/N) ").upper().strip()
+                if opcao not in ["S", "N"]:
+                    raise Exception
+                return opcao == "S"
+            except Exception:
+                print("Opção inválida!")
