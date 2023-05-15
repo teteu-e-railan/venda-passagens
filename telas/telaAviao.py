@@ -73,8 +73,11 @@ class TelaAviao(AbstractTela):
         return modelo
 
     def confirma_opcao(self, mensagem: str) -> bool:
-        opcao = input(mensagem + " (S/N) ").upper().strip()
-        while opcao not in ["S", "N"]:
-            print("Opção inválida!")
-            opcao = input(mensagem + " (S/N) ").upper().strip()
-        return opcao == "S"
+        while True:
+            try:
+                opcao = input(mensagem + " (S/N) ").upper().strip()
+                if opcao not in ["S", "N"]:
+                    raise Exception
+                return opcao == "S"
+            except Exception:
+                print("Opção inválida!")
