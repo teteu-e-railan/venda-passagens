@@ -1,6 +1,8 @@
 from entidades.passageiro import Passageiro
 from telas.telaPassageiro import TelaPassagerio
 from excepitions.passageiroJahExisteException import PassageiroJahExisteException
+from entidades.registro import Registro
+import datetime
 
 
 class ControladorPassageiro:
@@ -8,6 +10,10 @@ class ControladorPassageiro:
         self.__controlador_sistema = controlador_sistema
         self.__tela_passageiro = TelaPassagerio()
         self.__passageiros: list[Passageiro] = []
+        self.registros: list[Registro] = []
+
+    def adicionar_registro(self, registro):
+        self.registros.append(registro)
 
     def buscar_passageiro_por_cpf(self, cpf):
         for passageiro in self.__passageiros:
@@ -33,6 +39,13 @@ class ControladorPassageiro:
                     dados_passageiro["telefone"],
                 )
                 self.__passageiros.append(novo_passageiro)
+
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Inclusão do Passageiro: {novo_passageiro.nome}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_passageiro.mostra_mensagem(
                     "Passageiro cadastrado com sucesso!!!"
                 )
@@ -83,6 +96,12 @@ class ControladorPassageiro:
                 if dados_passageiro["telefone"]:
                     passageiro.telefone = dados_passageiro["telefone"]
 
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Alteração do passageiro: {passageiro.nome, passageiro.cpf, passageiro.idade, passageiro.telefone,}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_passageiro.mostra_mensagem(
                     "Passageiro alterado com sucesso!!!"
                 )
@@ -130,6 +149,11 @@ class ControladorPassageiro:
                     "Deseja realmente excluir este passageiro?"
                 ):
                     self.__passageiros.remove(passageiro)
+                    # Registro automático no histórico
+                    data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    descricao = f"Exclusão do passageiro: {passageiro.nome}"
+                    registro = Registro(data, descricao)
+                    self.adicionar_registro(registro)
                     self.__tela_passageiro.mostra_mensagem(
                         "Passageiro excluído com sucesso!!!"
                     )
@@ -146,6 +170,18 @@ class ControladorPassageiro:
                 if not opcao:
                     break
 
+    def listar_registros(self):
+        if not self.registros:
+            self.__tela_passageiro.mostra_mensagem("Nenhum Registro encontrado!!!")
+        else:
+            for registro in self.registros:
+                self.__tela_passageiro.mostra_registro(
+                    {
+                        "Descrição": registro.descricao,
+                        "Data e Hora": registro.data,
+                    }
+                )
+
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
@@ -155,6 +191,7 @@ class ControladorPassageiro:
             2: self.alterar_passageiro,
             3: self.listar_passageiros,
             4: self.excluir_passageiro,
+            5: self.listar_registros,
             0: self.retornar,
         }
         while True:

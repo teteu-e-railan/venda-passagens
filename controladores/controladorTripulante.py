@@ -1,6 +1,8 @@
 from entidades.tripulante import Tripulante
 from telas.telaTripulante import TelaTripulante
 from excepitions.tripulanteJahExisteException import TripulanteJahExisteException
+from entidades.registro import Registro
+import datetime
 
 
 class ControladorTripulante:
@@ -8,6 +10,10 @@ class ControladorTripulante:
         self.__controlador_sistema = controlador_sistema
         self.__tela_tripulante = TelaTripulante()
         self.__tripulantes: list[Tripulante] = []
+        self.registros: list[Registro] = []
+
+    def adicionar_registro(self, registro):
+        self.registros.append(registro)
 
     def buscar_tripulante_por_cpf(self, cpf):
         for tripulante in self.__tripulantes:
@@ -34,6 +40,13 @@ class ControladorTripulante:
                     dados_tripulante["cargo"],
                 )
                 self.__tripulantes.append(novo_tripulante)
+
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Inclusão do tripulante: {novo_tripulante.nome}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_tripulante.mostra_mensagem(
                     "Tripulante cadastrado com sucesso!!!"
                 )
@@ -89,6 +102,14 @@ class ControladorTripulante:
                 if dados_tripulante["cargo"]:
                     tripulante.cargo = dados_tripulante["cargo"]
 
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = (
+                    f"Alteração do tripulante: {tripulante.nome, tripulante.cpf}"
+                )
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_tripulante.mostra_mensagem(
                     "tripulante alterado com sucesso!!!"
                 )
@@ -137,6 +158,13 @@ class ControladorTripulante:
                     "Deseja realmente excluir este tripulante?"
                 ):
                     self.__tripulantes.remove(tripulante)
+
+                    # Registro automático no histórico
+                    data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    descricao = f"Exclusão do tripulante: {tripulante.nome}"
+                    registro = Registro(data, descricao)
+                    self.adicionar_registro(registro)
+
                     self.__tela_tripulante.mostra_mensagem(
                         "tripulante excluído com sucesso!!!"
                     )
@@ -153,6 +181,18 @@ class ControladorTripulante:
                 if not opcao:
                     break
 
+    def listar_registros(self):
+        if not self.registros:
+            self.__tela_tripulante.mostra_mensagem("Nenhum Registro encontrado!!!")
+        else:
+            for registro in self.registros:
+                self.__tela_tripulante.mostra_registro(
+                    {
+                        "Descrição": registro.descricao,
+                        "Data e Hora": registro.data,
+                    }
+                )
+
     def retornar(self):
         self.__controlador_sistema.abre_tela()
 
@@ -162,6 +202,7 @@ class ControladorTripulante:
             2: self.alterar_tripulante,
             3: self.listar_tripulantes,
             4: self.excluir_tripulante,
+            5: self.listar_registros,
             0: self.retornar,
         }
         while True:

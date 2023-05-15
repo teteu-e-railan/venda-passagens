@@ -9,6 +9,7 @@ class TelaTripulante(AbstractTela):
                 2: "Alterar Tripulante",
                 3: "Listar Tripulantes",
                 4: "Excluir Tripulante",
+                5: "Listar Registros",
                 0: "Voltar",
             }
         )
@@ -125,6 +126,11 @@ class TelaTripulante(AbstractTela):
                 "telefone": telefone,
                 "cargo": cargo,
             }
+
+    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
+        print("-------- LOG DE AÇÕES ----------")
+        for index, valor in dados_aviao.items():
+            print(f" {index} : {valor} ")
 
     def mostra_tripulante(self, dados_Tripulante: "dict[str, str | int]"):
         for index, valor in dados_Tripulante.items():

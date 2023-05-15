@@ -25,6 +25,7 @@ class TelaVoo(AbstractTela):
                 2: "Alterar Voo",
                 3: "Listar Voos",
                 4: "Excluir Voo",
+                5: "Listar Registros",
                 0: "Voltar",
             }
         )
@@ -109,6 +110,12 @@ class TelaVoo(AbstractTela):
             "destino": destino,
             "data_do_voo": data_do_voo,
         }
+
+    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
+        print("-------- LOG DE AÇÕES ----------")
+        for index, valor in dados_aviao.items():
+            print(f" {index} : {valor} ")
+            print("--------------------------------")
 
     def mostra_voo(self, dados_voo: dict):
         for chave, valor in dados_voo.items():
