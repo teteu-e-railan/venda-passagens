@@ -59,3 +59,9 @@ class Voo:
 
     def reservar_assento(self, fileira: int, assento_fileira: int):
         self.assentos[fileira][assento_fileira] = "X"
+
+    def remover_assento_reservado(self, fileira: int, assento_fileira: int):
+        self.assentos[fileira][assento_fileira] = ""
+
+    def verifica_assento_ocupado(self, fileira: int, assento_fileira: int) -> bool:
+        return self.assentos[fileira][assento_fileira] == "X"
