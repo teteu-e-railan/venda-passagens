@@ -1,4 +1,5 @@
 from entidades.voo import Voo
+from entidades.aviao import Aviao
 from telas.telaVoo import TelaVoo
 
 
@@ -23,11 +24,11 @@ class ControladorVoo:
         dados_voo = self.__tela_voo.pega_dados_voo()
         aviao = self.pega_aviao_por_modelo(dados_voo["modelo_aviao"])
 
-        if not aviao:
-            # TODO usar excecoes customizadas
-            raise Exception("Aviao nao encontrado")
-
         try:
+            if not aviao:
+                # TODO usar excecoes customizadas
+                raise Exception("Aviao nao encontrado!")
+
             for voo in self.voos:
                 if (
                     voo.partida == dados_voo["partida"]
@@ -38,6 +39,7 @@ class ControladorVoo:
 
         except Exception as e:
             self.__tela_voo.mostra_mensagem(str(e))
+            return
 
         novo_voo = Voo(
             dados_voo["partida"],
@@ -50,6 +52,11 @@ class ControladorVoo:
         self.__tela_voo.mostra_mensagem("Voo cadastrado com sucesso!")
 
     def alterar_voo(self):
+        self.listar_voos()
+
+        if not self.voos:
+            return
+
         codigo_voo = self.__tela_voo.seleciona_voo()
         voo = self.buscar_voo_por_codigo(codigo_voo)
 
@@ -71,6 +78,9 @@ class ControladorVoo:
             self.__tela_voo.mostra_mensagem("Voo alterado com sucesso!")
 
     def listar_voos(self):
+        if not self.voos:
+            self.__tela_voo.mostra_mensagem("Nenhum Voo cadastrado!")
+
         for voo in self.voos:
             self.__tela_voo.mostra_voo(
                 {
@@ -84,6 +94,10 @@ class ControladorVoo:
 
     def excluir_voo(self):
         self.listar_voos()
+
+        if not self.voos:
+            return
+
         codigo_voo = self.__tela_voo.seleciona_voo()
         voo = self.buscar_voo_por_codigo(codigo_voo)
 
@@ -91,9 +105,9 @@ class ControladorVoo:
             self.voos.remove(voo)
             self.__tela_voo.mostra_mensagem("Voo excluído com sucesso!")
         else:
-            self.__tela_voo.mostra_mensagem("ATENCAO: Voo não encontrado")
+            self.__tela_voo.mostra_mensagem("ATENCAO: Voo não encontrado!")
 
-    def pega_aviao_por_modelo(self, modelo: "str | None"):
+    def pega_aviao_por_modelo(self, modelo: "str | None") -> "Aviao | None":
         if modelo:
             return (
                 self.__controlador_sistema.controlador_avioes.buscar_aviao_por_modelo(
