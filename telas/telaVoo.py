@@ -1,8 +1,9 @@
-from typing import TypedDict, Optional
+from typing import TypedDict
 from telas.abstractTela import AbstractTela
+from helpers.verifica_data import verifica_data
 
 
-class DadosVoo(TypedDict):
+class DadosIncluiVoo(TypedDict):
     partida: str
     destino: str
     data_do_voo: str
@@ -34,12 +35,47 @@ class TelaVoo(AbstractTela):
 
         return self.verifica_opcao("Escolha uma opção: ")
 
-    def pega_dados_voo(self, novo_voo=True) -> DadosVoo:
+    def pega_dados_voo(self) -> DadosIncluiVoo:
         print("-------- DADOS VOO ----------")
-        partida = input("Local de partida do Voo: ").upper()
-        destino = input("Local de destino do Voo: ").upper()
-        data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ")
-        modelo_aviao = input("Modelo do Avião que realizará o Voo: ").upper()
+
+        while True:
+            partida = input("Local de partida do Voo: ").upper().strip()
+
+            if partida:
+                break
+
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            destino = input("Local de destino do Voo: ").upper().strip()
+
+            if destino:
+                break
+
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
+
+            try:
+                verifica_data(data_do_voo)
+                break
+
+            except ValueError:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            modelo_aviao = (
+                input("Modelo do Avião que realizará o Voo: ").upper().strip()
+            )
+
+            if modelo_aviao:
+                break
+
+            else:
+                print("Dado invalido, digite novamente!!!")
 
         return {
             "partida": partida,
@@ -50,9 +86,34 @@ class TelaVoo(AbstractTela):
 
     def pega_dados_altera_voo(self) -> DadosAlteraVoo:
         print("-------- DADOS VOO ----------")
-        partida = input("Local de partida do Voo: ").upper()
-        destino = input("Local de destino do Voo: ").upper()
-        data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ")
+
+        while True:
+            partida = input("Local de partida do Voo: ").upper().strip()
+
+            if partida:
+                break
+
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            destino = input("Local de destino do Voo: ").upper().strip()
+
+            if destino:
+                break
+
+            else:
+                print("Dado invalido, digite novamente!!!")
+
+        while True:
+            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
+
+            try:
+                verifica_data(data_do_voo)
+                break
+
+            except Exception:
+                print("Dado invalido, digite novamente!!!")
 
         return {
             "partida": partida,
