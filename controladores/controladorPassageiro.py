@@ -151,7 +151,7 @@ class ControladorPassageiro:
                     self.__passageiros.remove(passageiro)
                     # Registro automático no histórico
                     data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    descricao = f"Exclusão de avião: {passageiro.nome}"
+                    descricao = f"Exclusão do passageiro: {passageiro.nome}"
                     registro = Registro(data, descricao)
                     self.adicionar_registro(registro)
                     self.__tela_passageiro.mostra_mensagem(

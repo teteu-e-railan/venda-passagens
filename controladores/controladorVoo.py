@@ -12,6 +12,9 @@ class ControladorVoo:
         self.__voos: list[Voo] = []
         self.registros: list[Registro] = []
 
+    def adicionar_registro(self, registro):
+        self.registros.append(registro)
+
     @property
     def voos(self):
         return self.__voos
@@ -48,6 +51,13 @@ class ControladorVoo:
             )
 
             self.voos.append(novo_voo)
+
+            # Registro automático no histórico
+            data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            descricao = f"Inclusão de avião: {novo_voo.codigo, novo_voo.destino}"
+            registro = Registro(data, descricao)
+            self.adicionar_registro(registro)
+
             self.__tela_voo.mostra_mensagem("Voo cadastrado com sucesso!")
 
         except Exception as e:
@@ -78,6 +88,12 @@ class ControladorVoo:
             if dados_voo["data_do_voo"]:
                 voo.data_do_voo = dados_voo["data_do_voo"]
 
+            # Registro automático no histórico
+            data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            descricao = f"Alyteração do voo: {dados_voo}"
+            registro = Registro(data, descricao)
+            self.adicionar_registro(registro)
+
             self.__tela_voo.mostra_mensagem("Voo alterado com sucesso!")
 
     def listar_voos(self):
@@ -106,6 +122,13 @@ class ControladorVoo:
 
         if voo:
             self.voos.remove(voo)
+
+            # Registro automático no histórico
+            data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            descricao = f"Exclusão do voo: {voo}"
+            registro = Registro(data, descricao)
+            self.adicionar_registro(registro)
+
             self.__tela_voo.mostra_mensagem("Voo excluído com sucesso!")
 
         else:

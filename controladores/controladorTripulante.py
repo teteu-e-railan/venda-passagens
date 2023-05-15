@@ -40,6 +40,13 @@ class ControladorTripulante:
                     dados_tripulante["cargo"],
                 )
                 self.__tripulantes.append(novo_tripulante)
+
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = f"Inclusão do tripulante: {novo_tripulante.nome}"
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_tripulante.mostra_mensagem(
                     "Tripulante cadastrado com sucesso!!!"
                 )
@@ -95,6 +102,14 @@ class ControladorTripulante:
                 if dados_tripulante["cargo"]:
                     tripulante.cargo = dados_tripulante["cargo"]
 
+                # Registro automático no histórico
+                data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                descricao = (
+                    f"Alteração do tripulante: {tripulante.nome, tripulante.cpf}"
+                )
+                registro = Registro(data, descricao)
+                self.adicionar_registro(registro)
+
                 self.__tela_tripulante.mostra_mensagem(
                     "tripulante alterado com sucesso!!!"
                 )
@@ -143,6 +158,13 @@ class ControladorTripulante:
                     "Deseja realmente excluir este tripulante?"
                 ):
                     self.__tripulantes.remove(tripulante)
+
+                    # Registro automático no histórico
+                    data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    descricao = f"Exclusão do tripulante: {tripulante.nome}"
+                    registro = Registro(data, descricao)
+                    self.adicionar_registro(registro)
+
                     self.__tela_tripulante.mostra_mensagem(
                         "tripulante excluído com sucesso!!!"
                     )
