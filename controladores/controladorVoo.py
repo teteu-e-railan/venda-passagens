@@ -28,6 +28,18 @@ class ControladorVoo:
             # TODO usar excecoes customizadas
             raise Exception("Aviao nao encontrado")
 
+        try:
+            for voo in self.voos:
+                if (
+                    voo.partida == dados_voo["partida"]
+                    and voo.destino == dados_voo["destino"]
+                    and voo.aviao == aviao.modelo
+                ):
+                    raise Exception("Esse Voo já existe!")
+
+        except Exception as e:
+            self.__tela_voo.mostra_mensagem(str(e))
+
         novo_voo = Voo(
             dados_voo["partida"],
             dados_voo["destino"],
