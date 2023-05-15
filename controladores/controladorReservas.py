@@ -1,11 +1,12 @@
-from controladores.controladorSistema import ControladorSistema
-from telas.telaSistema import TelaSistema
+import string
 from telas.telaReservas import TelaReservas
 from entidades.reserva import Reserva
+from entidades.passageiro import Passageiro
+from entidades.voo import Voo
 
 
 class ControladorReservas:
-    def __init__(self, controlador_sistema: ControladorSistema):
+    def __init__(self, controlador_sistema):
         self.__tela_reservas = TelaReservas()
         self.__controlador_sistema = controlador_sistema
         self.__reservas: list[Reserva] = []
@@ -15,22 +16,52 @@ class ControladorReservas:
         return self.__reservas
 
     def incluir_reserva(self):
-        dados_reserva = self.__tela_reservas.pega_dados_reserva()
+        self.__controlador_sistema.controlador_passageiros.listar_passageiros_nome_cpf()
+
+        while True:
+            cpf = self.__tela_reservas.pega_cpf()
+
+            passageiro = self.pega_passageiro_por_cpf(cpf)
+
+            if passageiro:
+                break
+
+            self.__tela_reservas.mostra_mensagem("Passageiro não encontrado!")
+
+        self.__controlador_sistema.controlador_voos.listar_voos()
+
+        while True:
+            codigo_voo = self.__tela_reservas.pega_voo()
+
+            voo = self.pega_voo_por_codigo(codigo_voo)
+
+            if voo:
+                break
+
+            self.__tela_reservas.mostra_mensagem("Voo não encontrado!")
+
+        self.__tela_reservas.mostra_assentos_voo(voo)
+
+        while True:
+            fileira = self.__tela_reservas.pega_fileira()
+
+            if fileira <= voo.aviao.fileiras:
+                break
+
+            self.__tela_reservas.mostra_mensagem("Fileira inválida")
+
+        while True:
+            str_assento = self.__tela_reservas.pega_assento_fileira()
+            assento_fileira = string.ascii_uppercase.index(str_assento)
+
+            if assento_fileira <= voo.aviao.assentos_por_fileira - 1:
+                break
+
+            self.__tela_reservas.mostra_mensagem("Assento inválido!")
 
         try:
-            passageiro = self.pega_passageiro_por_cpf(dados_reserva["cpf_passageiro"])
-
-            if not passageiro:
-                # TODO usar exceções customizadas
-                raise Exception("Passageiro não encontrado!")
-
-            voo = self.pega_voo_por_codigo(dados_reserva["codigo_voo"])
-
-            if not voo:
-                # TODO usar exceções customizadas
-                raise Exception("Voo não encontrado!")
-
-            nova_reserva = Reserva(dados_reserva["assento"], passageiro, voo)
+            nova_reserva = Reserva(fileira, assento_fileira, passageiro, voo)
+            voo.reservar_assento(fileira - 1, assento_fileira)
             self.reservas.append(nova_reserva)
 
             self.__tela_reservas.mostra_mensagem("Reserva realizada com sucesso!")
@@ -40,6 +71,12 @@ class ControladorReservas:
 
     def alterar_reserva(self):
         self.listar_reservas()
+
+        if not self.reservas:
+            self.__tela_reservas.mostra_mensagem(
+                "Não há nenhuma reserva registrada ainda :( "
+            )
+
         codigo_reserva = self.__tela_reservas.seleciona_reserva()
         reserva = self.pega_reserva_por_codigo(codigo_reserva)
 
@@ -47,32 +84,61 @@ class ControladorReservas:
             self.__tela_reservas.mostra_mensagem("Reserva não encontrada!")
 
         else:
-            dados_reserva = self.__tela_reservas.pega_dados_reserva()
-
-            passageiro = None
-
             try:
-                if dados_reserva["cpf_passageiro"]:
-                    passageiro = self.pega_passageiro_por_cpf(
-                        dados_reserva["cpf_passageiro"]
-                    )
+                self.__controlador_sistema.controlador_passageiros.listar_passageiros_nome_cpf()
+
+                cpf = self.__tela_reservas.pega_cpf(alterando=True)
+
+                if cpf:
+                    passageiro = self.pega_passageiro_por_cpf(cpf)
 
                     if not passageiro:
                         # TODO usar exceções customizadas
                         raise Exception("Passageiro não encontrado!")
 
-                if dados_reserva["assento"]:
-                    # TODO verificar se assento é válido
-                    reserva.assento = dados_reserva["assento"]
+                self.__tela_reservas.mostra_assentos_voo(reserva.voo)
 
-                if passageiro:
-                    reserva.passageiro = passageiro
+                fileira = self.__tela_reservas.pega_fileira(alterando=True)
+
+                if fileira:
+                    if fileira > reserva.voo.aviao.fileiras:
+                        raise Exception("Fileira inválida")
+
+                else:
+                    fileira = reserva.fileira
+
+                assento = self.__tela_reservas.pega_assento_fileira(alterando=True)
+
+                if assento:
+                    assento = string.ascii_uppercase.index(assento)
+
+                    if assento > reserva.voo.aviao.assentos_por_fileira - 1:
+                        raise Exception("Assento inválido")
+
+                else:
+                    assento = reserva.assento
+
+                if reserva.voo.verifica_assento_ocupado(fileira - 1, assento):
+                    raise Exception("O assento já encontra-se ocupado")
+
+                reserva.voo.remover_assento_reservado(
+                    reserva.fileira - 1, reserva.assento
+                )
+
+                reserva.fileira = fileira
+                reserva.assento = assento
+                reserva.voo.reservar_assento(fileira - 1, assento)
+
+                self.__tela_reservas.mostra_mensagem("Reserva alterada com sucesso!")
 
             except Exception as e:
                 self.__tela_reservas.mostra_mensagem(str(e))
 
     def excluir_reserva(self):
         self.listar_reservas()
+
+        if not self.reservas:
+            self.__tela_reservas.mostra_mensagem("Nenhuma reserva registrada ainda :( ")
 
         codigo_reserva = self.__tela_reservas.seleciona_reserva()
         reserva = self.pega_reserva_por_codigo(codigo_reserva)
@@ -85,15 +151,18 @@ class ControladorReservas:
             self.__tela_reservas.mostra_mensagem("Reserva excluida com sucesso!")
 
     def listar_reservas(self):
+        if not self.reservas:
+            self.__tela_reservas.mostra_mensagem("Nenhuma reserva registrada ainda :( ")
+
         for reserva in self.reservas:
             self.__tela_reservas.mostra_reserva(
                 {
                     "Codigo": reserva.codigo,
-                    "Assento": reserva.assento,
-                    # "Passageiro": reserva.passageiro.nome
-                    # "Partida": reserva.voo.partida
-                    # "Destino": reserva.voo.destino
-                    # "Data": reserva.voo.data
+                    "Assento": f"{reserva.fileira}{string.ascii_uppercase[reserva.assento]}",
+                    "Passageiro": reserva.passageiro.nome,
+                    "Partida": reserva.voo.partida,
+                    "Destino": reserva.voo.destino,
+                    "Data": reserva.voo.data_do_voo.strftime("%d/%m/%Y"),
                 }
             )
 
@@ -104,17 +173,13 @@ class ControladorReservas:
 
         return None
 
-    def pega_passageiro_por_cpf(self, cpf: str):
-        pass
-        # return (
-        #     self.__controlador_sistema.controlador_passageiros.pega_passageiro_por_cpf(
-        #         cpf
-        #     )
-        # )
+    def pega_passageiro_por_cpf(self, cpf: str) -> "Passageiro | None":
+        return self.__controlador_sistema.controlador_passageiros.buscar_passageiro_por_cpf(
+            cpf
+        )
 
-    def pega_voo_por_codigo(self, codigo: str):
-        pass
-        # return self.__controlador_sistema.controlador_voos.pega_voo_por_codigo(codigo)
+    def pega_voo_por_codigo(self, codigo: str) -> "Voo | None":
+        return self.__controlador_sistema.controlador_voos.buscar_voo_por_codigo(codigo)
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
