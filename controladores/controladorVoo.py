@@ -1,7 +1,6 @@
 from entidades.voo import Voo
 from telas.telaVoo import TelaVoo
 from controladores.controladorSistema import ControladorSistema
-from excepitions.aviaoJahExisteException import AviaoJahExisteException
 
 
 class ControladorVoo:
