@@ -1,5 +1,7 @@
 from datetime import date
 from entidades.aviao import Aviao
+from helpers.gerador_id import gerar_id
+from helpers.gerar_matriz_assentos import gerar_matriz_assentos
 
 
 class Voo:
@@ -10,12 +12,14 @@ class Voo:
         data_do_voo: date,
         aviao: Aviao,
     ):
-        self.__codigo = "1321"  # TODO autogenerate
+        self.__codigo = gerar_id()
         self.__partida = partida
         self.__destino = destino
         self.__data_do_voo = data_do_voo
         self.__aviao = aviao
-        self.__assentos = []  # TODO gerar matriz de assentos
+        self.__assentos = gerar_matriz_assentos(
+            self.aviao.fileiras, self.aviao.assentos_por_fileira
+        )
 
     @property
     def codigo(self) -> str:
