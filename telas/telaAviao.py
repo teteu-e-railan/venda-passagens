@@ -9,6 +9,7 @@ class TelaAviao(AbstractTela):
                 2: "Alterar Avião",
                 3: "Listar Aviões",
                 4: "Excluir Avião",
+                5: "Listar Registros",
                 0: "Voltar",
             }
         )
@@ -92,6 +93,11 @@ class TelaAviao(AbstractTela):
             }
 
     def mostra_aviao(self, dados_aviao: "dict[str, str | int]"):
+        for index, valor in dados_aviao.items():
+            print(f" {index} : {valor} ")
+
+    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
+        print("-------- LOG DE AÇÕES ----------")
         for index, valor in dados_aviao.items():
             print(f" {index} : {valor} ")
 

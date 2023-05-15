@@ -9,6 +9,7 @@ class TelaPassagerio(AbstractTela):
                 2: "Alterar Passageiro",
                 3: "Listar Passageiros",
                 4: "Excluir Passageiro",
+                5: "Listar Registros",
                 0: "Voltar",
             }
         )
@@ -111,6 +112,11 @@ class TelaPassagerio(AbstractTela):
                 "idade": idade,
                 "telefone": telefone,
             }
+
+    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
+        print("-------- LOG DE AÇÕES ----------")
+        for index, valor in dados_aviao.items():
+            print(f" {index} : {valor} ")
 
     def mostra_passageiro(self, dados_passageiro: "dict[str, str | int]"):
         for index, valor in dados_passageiro.items():
