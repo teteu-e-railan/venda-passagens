@@ -46,10 +46,16 @@ class ControladorVoo:
             self.__tela_voo.mostra_mensagem("Voo não encontrado!")
 
         else:
-            dados_voo = self.__tela_voo.pega_dados_voo(novo_voo=False)
-            voo.partida = dados_voo["partida"]
-            voo.destino = dados_voo["destino"]
-            voo.data_do_voo = dados_voo["data_do_voo"]
+            dados_voo = self.__tela_voo.pega_dados_altera_voo()
+
+            if dados_voo["partida"]:
+                voo.partida = dados_voo["partida"]
+
+            if dados_voo["destino"]:
+                voo.destino = dados_voo["destino"]
+
+            if dados_voo["data_do_voo"]:
+                voo.data_do_voo = dados_voo["data_do_voo"]
 
     def listar_voos(self):
         for voo in self.voos:
