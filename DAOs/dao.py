@@ -43,3 +43,7 @@ class DAO(ABC):
     def clear(self):
         self.__cache.clear()
         self.__dump()
+
+    def has(self, key):
+        """Checa se a chave está presente no dicionário."""
+        return key in self.__cache
