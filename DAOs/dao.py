@@ -29,13 +29,17 @@ class DAO(ABC):
             self.__dump()
 
     def get(self, key):
-        if key in self.__cache:
+        try:
             return self.__cache.get(key)
+        except KeyError:
+            return None
 
     def remove(self, key):
-        if key in self.__cache:
+        try:
             self.__cache.pop(key)
             self.__dump()
+        except KeyError:
+            return False
 
     def get_all(self):
         return self.__cache.values()
