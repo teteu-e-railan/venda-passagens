@@ -24,7 +24,7 @@ class DAO(ABC):
         self.__dump()
 
     def update(self, key, obj):
-        if key in self.__cache:
+        if self.has(key):
             self.__cache[key] = obj
             self.__dump()
 
