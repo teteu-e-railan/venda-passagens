@@ -1,4 +1,5 @@
 import string
+from DAOs.reserva_dao import ReservaDAO
 from telas.telaReservas import TelaReservas
 from entidades.reserva import Reserva
 from entidades.passageiro import Passageiro
@@ -9,11 +10,11 @@ class ControladorReservas:
     def __init__(self, controlador_sistema):
         self.__tela_reservas = TelaReservas()
         self.__controlador_sistema = controlador_sistema
-        self.__reservas: list[Reserva] = []
+        self.__reserva_dao = ReservaDAO()
 
     @property
     def reservas(self):
-        return self.__reservas
+        return self.__reserva_dao.get_all()
 
     def incluir_reserva(self):
         self.__controlador_sistema.controlador_passageiros.listar_passageiros_nome_cpf()
