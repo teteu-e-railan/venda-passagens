@@ -2,6 +2,7 @@ from entidades.voo import Voo
 from entidades.aviao import Aviao
 from telas.telaVoo import TelaVoo
 from entidades.registro import Registro
+from DAOs.voo_dao import VooDAO
 import datetime
 
 
@@ -9,7 +10,7 @@ class ControladorVoo:
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_voo = TelaVoo()
-        self.__voos: list[Voo] = []
+        self.__voo_dao = VooDAO()
         self.registros: list[Registro] = []
 
     def adicionar_registro(self, registro):
@@ -17,7 +18,7 @@ class ControladorVoo:
 
     @property
     def voos(self):
-        return self.__voos
+        return self.__voo_dao.get_all()
 
     def buscar_voo_por_codigo(self, codigo):
         for voo in self.voos:
