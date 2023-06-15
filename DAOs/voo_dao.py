@@ -19,7 +19,7 @@ class VooDAO(DAO):
             return super().get(key)
 
     def get_all(self) -> list[Voo]:
-        return super().get_all()
+        return list(super().get_all())
 
     def remove(self, key: str):
         if isinstance(key, str):
