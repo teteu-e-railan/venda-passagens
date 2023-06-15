@@ -21,6 +21,6 @@ class VooDAO(DAO):
     def get_all(self) -> list[Voo]:
         return super().get_all()
 
-    def remove(selfself, key: str):
+    def remove(self, key: str):
         if isinstance(key, str):
             return super().remove(key)
