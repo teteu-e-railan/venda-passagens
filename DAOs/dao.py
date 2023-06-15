@@ -39,3 +39,7 @@ class DAO(ABC):
 
     def get_all(self):
         return self.__cache.values()
+
+    def clear(self):
+        self.__cache.clear()
+        self.__dump()
