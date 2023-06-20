@@ -51,7 +51,7 @@ class ControladorVoo:
                 aviao,
             )
 
-            self.voos.append(novo_voo)
+            self.__voo_dao.add(novo_voo)
 
             # Registro automático no histórico
             data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -95,6 +95,7 @@ class ControladorVoo:
             registro = Registro(data, descricao)
             self.adicionar_registro(registro)
 
+            self.__voo_dao.update(voo)
             self.__tela_voo.mostra_mensagem("Voo alterado com sucesso!")
 
     def listar_voos(self):
@@ -122,7 +123,7 @@ class ControladorVoo:
         voo = self.buscar_voo_por_codigo(codigo_voo)
 
         if voo:
-            self.voos.remove(voo)
+            self.__voo_dao.remove(voo.codigo)
 
             # Registro automático no histórico
             data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
