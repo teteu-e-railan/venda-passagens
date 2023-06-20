@@ -63,7 +63,7 @@ class ControladorReservas:
         try:
             nova_reserva = Reserva(fileira, assento_fileira, passageiro, voo)
             voo.reservar_assento(fileira - 1, assento_fileira)
-            self.reservas.append(nova_reserva)
+            self.__reserva_dao.add(nova_reserva)
 
             self.__tela_reservas.mostra_mensagem("Reserva realizada com sucesso!")
 
@@ -130,6 +130,7 @@ class ControladorReservas:
                 reserva.assento = assento
                 reserva.voo.reservar_assento(fileira - 1, assento)
 
+                self.__reserva_dao.update(reserva)
                 self.__tela_reservas.mostra_mensagem("Reserva alterada com sucesso!")
 
             except Exception as e:
@@ -148,7 +149,7 @@ class ControladorReservas:
             self.__tela_reservas.mostra_mensagem("Reserva não encontrada!")
 
         else:
-            self.reservas.remove(reserva)
+            self.__reserva_dao.remove(reserva.codigo)
             self.__tela_reservas.mostra_mensagem("Reserva excluida com sucesso!")
 
     def listar_reservas(self):
