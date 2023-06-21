@@ -168,5 +168,5 @@ class ControladorVoo:
         }
 
         while True:
-            opcao = self.__tela_voo.tela_opcoes()
+            opcao = self.__tela_voo.mostra_opcoes()
             opcoes_controlador[opcao]()

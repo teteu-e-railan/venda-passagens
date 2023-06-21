@@ -195,5 +195,5 @@ class ControladorPassageiro:
             0: self.retornar,
         }
         while True:
-            opcao = self.__tela_passageiro.tela_opcoes()
+            opcao = self.__tela_passageiro.mostra_opcoes()
             opcoes_controlador[opcao]()

@@ -2,6 +2,7 @@ import string
 from typing import TypedDict
 from telas.abstractTela import AbstractTela
 from entidades.voo import Voo
+import customtkinter
 
 
 class DadosIncluiReserva(TypedDict):
@@ -23,13 +24,36 @@ class TelaReservas(AbstractTela):
             }
         )
 
-    def mostra_opcoes(self):
-        print("-------- Reservas ----------")
+    def mostra_opcoes(self) -> int:
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry('500x600')
+        nova_janela.title("Tela Reservas")
+
+        opcao_selecionada = None
+
+        def set_opcao_selecionada(index: int):
+            nonlocal opcao_selecionada
+            opcao_selecionada = index
+            nova_janela.destroy()
+
+        frame = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label = customtkinter.CTkLabel(master=frame, text="RESERVAS", font=('Tahoma', 20))
+        label.pack(pady=12, padx=10)
 
         for index, opcao in self.opcoes.items():
-            print(f"{index} - {opcao}")
+            button = customtkinter.CTkButton(master=frame, text=opcao, command=lambda index=index: set_opcao_selecionada(index))
+            button.pack(pady=12, padx=10)
 
-        return self.verifica_opcao("Escolha uma opção: ")
+        nova_janela.mainloop()
+
+        return opcao_selecionada
 
     def pega_cpf(self, alterando=False):
         while True:
