@@ -1,34 +1,68 @@
-import customtkinter
-
-customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme(
-    "dark-blue"
-)  # Themes: "blue" (standard), "green", "dark-blue"
+from typing import Type
+import customtkinter as ctk
 
 
-class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+class MyApp(ctk.CTk):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.title("My Single Page Application")
+        self.geometry("564x300")
 
-        # Montagem da tela e componentes
-        self.title("Exemplo teste")
-        self.geometry(f"{1100}x{580}")
+        # Dictionary to store the pages
+        self.pages: dict[Type[ctk.CTkFrame], ctk.CTkFrame] = {}
 
-        # Testando a renderizacao de botoes dentro de um `for loop`
-        for i in [0, 1, 2, 3]:
-            customtkinter.CTkButton(
-                self, text=f"Botao{i}", command=lambda index=i: self.on_click(index)
-            ).pack(padx=20, pady=10)
+        self.show_page(HomePage)  # Show the initial page
 
-    def mostra_opcoes(self):
-        self.mainloop()
+    def show_page(self, page_class: Type[ctk.CTkFrame]):
+        # Hide the current page (if any)
+        if hasattr(self, "current_page"):
+            self.current_page.pack_forget()
 
-        return self.index_selecionado
+        try:
+            # Get stored page in dictionary
+            page = self.pages[page_class]
+        except KeyError:
+            # Create a new instance of the requested page class
+            page = page_class(self)
+            # Store the page in the dictionary for future reference
+            self.pages[page_class] = page
 
-    def on_click(self, index: int):
-        self.index_selecionado = index
-        self.destroy()
+        # Pack the page and make it visible
+        page.pack(side="top", fill="both", expand=True)
+        self.current_page = page
 
 
-app = App()
-print(app.mostra_opcoes())
+class HomePage(ctk.CTkFrame):
+    def __init__(self, master: MyApp):
+        super().__init__(master)
+
+        # Create widgets for the home page
+        label = ctk.CTkLabel(self, text="Welcome to the Home Page!", font=("Arial", 24))
+        label.pack(pady=50)
+
+        button = ctk.CTkButton(
+            self,
+            text="Go to About Page",
+            command=lambda: self.master.show_page(AboutPage),
+        )
+        button.pack()
+
+
+class AboutPage(ctk.CTkFrame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Create widgets for the about page
+        label = ctk.CTkLabel(self, text="This is the About Page", font=("Arial", 24))
+        label.pack(pady=50)
+
+        button = ctk.CTkButton(
+            self,
+            text="Go to Home Page",
+            command=lambda: self.master.show_page(HomePage),
+        )
+        button.pack()
+
+
+app = MyApp()
+app.mainloop()
