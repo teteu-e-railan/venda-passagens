@@ -1,23 +1,17 @@
-from telas.abstractTela import AbstractTela
+from telas.abstractTelaOpcoes import AbstractTelaOpcoes
 
 
-class TelaSistema(AbstractTela):
-    def __init__(self):
+class TelaSistema(AbstractTelaOpcoes):
+    def __init__(self, parent, controller):
         super().__init__(
-            {
+            parent,
+            controller,
+            opcoes={
                 1: "Reservas",
                 2: "Passageiros",
                 3: "Tripulantes",
                 4: "Voos",
                 5: "Aviões",
                 0: "Finalizar Sistema",
-            }
+            },
         )
-
-    def mostra_opcoes(self) -> int:
-        print("-------- Sistema ----------")
-
-        for index, opcao in self.opcoes.items():
-            print(f"{index} - {opcao}")
-
-        return self.verifica_opcao("Escolha uma opção: ")

@@ -1,14 +1,17 @@
 import string
+from controladores.abstractControlador import AbstractController
 from telas.telaReservas import TelaReservas
 from entidades.reserva import Reserva
 from entidades.passageiro import Passageiro
 from entidades.voo import Voo
 
 
-class ControladorReservas:
-    def __init__(self, controlador_sistema):
-        self.__tela_reservas = TelaReservas()
-        self.__controlador_sistema = controlador_sistema
+class ControladorReservas(AbstractController):
+    VIEW_CLASS = TelaReservas
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
         self.__reservas: list[Reserva] = []
 
     @property
@@ -182,9 +185,9 @@ class ControladorReservas:
         return self.__controlador_sistema.controlador_voos.buscar_voo_por_codigo(codigo)
 
     def retornar(self):
-        self.__controlador_sistema.abre_tela()
+        self.parent.main.view.show()
 
-    def abre_tela(self):
+    def seleciona_opcao(self, index: int):
         opcoes_controlador = {
             1: self.incluir_reserva,
             2: self.alterar_reserva,
@@ -193,7 +196,4 @@ class ControladorReservas:
             0: self.retornar,
         }
 
-        while True:
-            opcao_escolhida = self.__tela_reservas.mostra_opcoes()
-
-            opcoes_controlador[opcao_escolhida]()
+        opcoes_controlador[index]()

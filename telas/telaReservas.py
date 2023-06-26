@@ -1,7 +1,7 @@
 import string
 from typing import TypedDict
-from telas.abstractTela import AbstractTela
 from entidades.voo import Voo
+from telas.abstractTelaOpcoes import AbstractTelaOpcoes
 
 
 class DadosIncluiReserva(TypedDict):
@@ -11,25 +11,19 @@ class DadosIncluiReserva(TypedDict):
     codigo_voo: str
 
 
-class TelaReservas(AbstractTela):
-    def __init__(self):
+class TelaReservas(AbstractTelaOpcoes):
+    def __init__(self, parent, controller):
         super().__init__(
+            parent,
+            controller,
             {
                 1: "Incluir Reserva",
                 2: "Alterar Reserva",
                 3: "Excluir Reserva",
                 4: "Listar Reservas",
                 0: "Retornar",
-            }
+            },
         )
-
-    def mostra_opcoes(self):
-        print("-------- Reservas ----------")
-
-        for index, opcao in self.opcoes.items():
-            print(f"{index} - {opcao}")
-
-        return self.verifica_opcao("Escolha uma opção: ")
 
     def pega_cpf(self, alterando=False):
         while True:
