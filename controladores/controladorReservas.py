@@ -1,4 +1,5 @@
 import string
+from DAOs.reserva_dao import ReservaDAO
 from telas.telaReservas import TelaReservas
 from entidades.reserva import Reserva
 from entidades.passageiro import Passageiro
@@ -9,11 +10,11 @@ class ControladorReservas:
     def __init__(self, controlador_sistema):
         self.__tela_reservas = TelaReservas()
         self.__controlador_sistema = controlador_sistema
-        self.__reservas: list[Reserva] = []
+        self.__reserva_dao = ReservaDAO()
 
     @property
     def reservas(self):
-        return self.__reservas
+        return self.__reserva_dao.get_all()
 
     def incluir_reserva(self):
         self.__controlador_sistema.controlador_passageiros.listar_passageiros_nome_cpf()
@@ -62,7 +63,7 @@ class ControladorReservas:
         try:
             nova_reserva = Reserva(fileira, assento_fileira, passageiro, voo)
             voo.reservar_assento(fileira - 1, assento_fileira)
-            self.reservas.append(nova_reserva)
+            self.__reserva_dao.add(nova_reserva)
 
             self.__tela_reservas.mostra_mensagem("Reserva realizada com sucesso!")
 
@@ -129,6 +130,7 @@ class ControladorReservas:
                 reserva.assento = assento
                 reserva.voo.reservar_assento(fileira - 1, assento)
 
+                self.__reserva_dao.update(reserva)
                 self.__tela_reservas.mostra_mensagem("Reserva alterada com sucesso!")
 
             except Exception as e:
@@ -147,7 +149,7 @@ class ControladorReservas:
             self.__tela_reservas.mostra_mensagem("Reserva não encontrada!")
 
         else:
-            self.reservas.remove(reserva)
+            self.__reserva_dao.remove(reserva.codigo)
             self.__tela_reservas.mostra_mensagem("Reserva excluida com sucesso!")
 
     def listar_reservas(self):
