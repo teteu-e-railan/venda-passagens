@@ -1,3 +1,4 @@
+from app import App
 from telas.abstractFrame import AbstractFrame
 
 
@@ -7,13 +8,14 @@ class AbstractController:
     STATE_INITIALIZED = 0
     STATE_CONFIGURED = 1
     STATE_STARTED = 2
+    STATE_HIDDEN = 3
     STATE_STOPPED = -1
 
     VIEW_CLASS = AbstractFrame
 
-    def __init__(self, parent, view=None):
+    def __init__(self, parent):
         self.__parent = parent
-        self.__view = view
+        self.__view: "AbstractFrame | None" = None
 
         self.__state = self.STATE_INITIALIZED
 
@@ -23,7 +25,20 @@ class AbstractController:
 
     @property
     def parent_view(self):
-        return self.__parent.root
+        return self.parent.root
+
+    @property
+    def parent(self):
+        return self.__parent
+
+    @property
+    def application(self):
+        result = self.parent
+
+        if not isinstance(result, App):
+            result = result.application
+
+        return result
 
     @property
     def view(self):
@@ -43,7 +58,7 @@ class AbstractController:
 
     def init_config(self):
         self.__init_config()
-        self._state = self.STATE_CONFIGURED
+        self.__state = self.STATE_CONFIGURED
 
         return self
 
@@ -52,36 +67,37 @@ class AbstractController:
 
         Deve ser chamado antes de mostrar a tela ou iniciar o controlador.
         """
-        if not self.view:
+        if self.view is None:
             self.carrega_tela()
 
-        self.view.prepare()
+        self.view.init_components()
 
         return self
 
     def start(self):
-        if not self.is_configured():
+        if self.state < self.STATE_CONFIGURED:
             self.init_config()
 
-        self._state = self.STATE_STARTED
+        self.__state = self.STATE_STARTED
         return self._start()
 
     def _start(self):
         """Inicializa o controlador e abre a tela"""
         self.view.show()
 
-    def stop(self):
-        """Para o controlador e fecha a tela"""
-        self._state = self.STATE_STOPPED
-        return self._stop()
+    def hide(self):
+        self.__state = self.STATE_HIDDEN
+        return self._hide()
 
-    def _stop(self):
-        if not self.view.is_closed():
-            self.view.close()
+    def _hide(self):
+        """Para o controlador e fecha a tela"""
+        if not self.view.is_hidden():
+            self.view.hide()
 
     def carrega_tela(self):
         """Retorna a instancia da classe associada ao controlador em VIEW_CLASS"""
-        self._view = self.VIEW_CLASS(self.parent_view, self)
+        self.__view = self.VIEW_CLASS(self.parent_view, self)
+
         return self.view
 
 
@@ -91,8 +107,8 @@ class AbstractControllerSet(AbstractController):
     possuem uma tela e outros controladores associados.
     """
 
-    def __init__(self, parent, view):
-        super().__init__(parent, view)
+    def __init__(self, parent):
+        super().__init__(parent)
 
         self.__controladores = {}
 

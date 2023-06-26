@@ -1,4 +1,5 @@
 from customtkinter import CTkFrame
+from app import App
 
 
 class BaseFrame:
@@ -11,28 +12,28 @@ class BaseFrame:
     FONT_HUGE = (FONT_FAMILY, 16)
 
     @staticmethod
-    def configurar_grid(frame: CTkFrame, sticky="nsew", **kwargs):
-        frame.grid(sticky=sticky, **kwargs)
+    def configurar_grid(w, sticky="nsew", **kwargs):
+        w.grid(sticky=sticky, **kwargs)
 
     @staticmethod
-    def configurar_coluna(frame: CTkFrame, indexes, weight=1, **kwargs):
+    def configurar_coluna(w, indexes, weight=1, **kwargs):
         if not isinstance(indexes, (tuple, list)):
             indexes = [indexes]
 
         kwargs["weight"] = weight
 
         for index in indexes:
-            frame.grid_columnconfigure(index, **kwargs)
+            w.grid_columnconfigure(index, **kwargs)
 
     @staticmethod
-    def configurar_linha(frame, indexes, weight=1, **kwargs):
+    def configurar_linha(w, indexes, weight=1, **kwargs):
         if not isinstance(indexes, (tuple, list)):
             indexes = [indexes]
 
         kwargs["weight"] = weight
 
         for index in indexes:
-            frame.grid_rowconfigure(index, **kwargs)
+            w.grid_rowconfigure(index, **kwargs)
 
 
 class AbstractFrame(CTkFrame, BaseFrame):
@@ -50,9 +51,6 @@ class AbstractFrame(CTkFrame, BaseFrame):
         self.__parent = parent
         self.__controller = controller
         self.__widgets = {}
-
-    def __del__(self):
-        self.close()
 
     @property
     def view_state(self):
@@ -75,7 +73,7 @@ class AbstractFrame(CTkFrame, BaseFrame):
     def controlador_app(self):
         """Retorna o controler do App"""
         result = self.controller.parent
-        if not isinstance(result, Application):
+        if not isinstance(result, App):
             result = result.application
 
         return result
@@ -104,12 +102,12 @@ class AbstractFrame(CTkFrame, BaseFrame):
         return self.view_state == self.STATE_CLOSED
 
     def init_components(self):
-        self.__init_components()
-        self._view_state = self.STATE_CONFIGURED
+        self._init_components()
+        self.__view_state = self.STATE_CONFIGURED
 
         return self
 
-    def __init_components(self):
+    def _init_components(self):
         """Método de configuracao para preparar os componentes da tela."""
         raise NotImplementedError
 
@@ -117,7 +115,7 @@ class AbstractFrame(CTkFrame, BaseFrame):
         if self.view_state < self.STATE_CONFIGURED:
             self.init_components()
 
-        self._view_state = self.STATE_SHOWING
+        self.__view_state = self.STATE_SHOWING
         self.__show()
 
     def __show(self):
@@ -125,7 +123,7 @@ class AbstractFrame(CTkFrame, BaseFrame):
         self.tkraise()
 
     def hide(self):
-        self._view_state = self.STATE_HIDDEN
+        self.__view_state = self.STATE_HIDDEN
         self.__hide()
 
     def __hide(self):
@@ -133,11 +131,14 @@ class AbstractFrame(CTkFrame, BaseFrame):
         self.grid_remove()
 
     def close(self):
-        self._view_state = self.STATE_CLOSED
+        self.__view_state = self.STATE_CLOSED
         return self.__close()
 
     def __close(self):
-        raise NotImplementedError
+        if self.controller and not self.controller.is_stopped():
+            self.controller.stop()
+
+        self.destroy()
 
     def has_widget(self, name):
         return name in self.widgets.keys()
