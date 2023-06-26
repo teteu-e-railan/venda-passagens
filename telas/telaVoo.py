@@ -38,7 +38,7 @@ class TelaVoo(AbstractTela):
 
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
-        nova_janela.geometry('500x600')
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
         nova_janela.title("Tela do sistema")
 
         opcao_selecionada = None
@@ -62,92 +62,143 @@ class TelaVoo(AbstractTela):
 
         return opcao_selecionada
 
-    def pega_dados_voo(self) -> DadosIncluiVoo:
-        print("-------- DADOS VOO ----------")
+    def pega_dados_voo(self) -> dict:
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
 
-        while True:
-            partida = input("Local de partida do Voo: ").upper().strip()
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
 
-            if partida:
-                break
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
 
-            else:
-                print("Dado invalido, digite novamente!!!")
+        partida_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de partida do Voo:", width=200)
+        partida_entry.pack(pady=10, padx=10)
 
-        while True:
-            destino = input("Local de destino do Voo: ").upper().strip()
+        destino_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de destino do Voo:", width=200)
+        destino_entry.pack(pady=10, padx=10)
 
-            if destino:
-                break
+        data_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Data do Voo (formato: DD/MM/AAAA):", width=200)
+        data_entry.pack(pady=10, padx=10)
 
-            else:
-                print("Dado invalido, digite novamente!!!")
+        modelo_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Modelo do Avião que realizará o Voo:", width=200)
+        modelo_entry.pack(pady=10, padx=10)
 
-        while True:
-            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
+        def confirmar():
+            partida = partida_entry.get()
+            destino = destino_entry.get()
+            data_do_voo = data_entry.get()
+            modelo_aviao = modelo_entry.get()
 
-            try:
-                data_do_voo = verifica_data(data_do_voo)
-                break
+            if partida and destino and data_do_voo and modelo_aviao:
+                nova_janela.destroy()
+                self.operacao_pega_dados_voo({
+                    "partida": partida,
+                    "destino": destino,
+                    "data_do_voo": data_do_voo,
+                    "modelo_aviao": modelo_aviao
+                })
 
-            except ValueError:
-                print("Dado invalido, digite novamente!!!")
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
 
-        while True:
-            modelo_aviao = (
-                input("Modelo do Avião que realizará o Voo: ").upper().strip()
-            )
+        nova_janela.mainloop()
 
-            if modelo_aviao:
-                break
+    def pega_dados_altera_voo(self) -> dict:
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
 
-            else:
-                print("Dado invalido, digite novamente!!!")
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='blue')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
 
-        return {
-            "partida": partida,
-            "destino": destino,
-            "data_do_voo": data_do_voo,
-            "modelo_aviao": modelo_aviao,
-        }
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
 
-    def pega_dados_altera_voo(self) -> DadosAlteraVoo:
-        print("-------- DADOS VOO ----------")
+        partida_entry = customtkinter.CTkEntry(master=frame_principal, text="Local de partida do Voo:")
+        partida_entry.pack(pady=10, padx=10)
 
-        partida = input("Local de partida do Voo: ").upper().strip()
-        destino = input("Local de destino do Voo: ").upper().strip()
+        destino_entry = customtkinter.CTkEntry(master=frame_principal, text="Local de destino do Voo:")
+        destino_entry.pack(pady=10, padx=10)
 
-        while True:
-            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
+        data_entry = customtkinter.CTkEntry(master=frame_principal, text="Data do Voo (formato: DD/MM/AAAA):")
+        data_entry.pack(pady=10, padx=10)
 
-            if not data_do_voo:
-                break
+        def confirmar():
+            partida = partida_entry.get()
+            destino = destino_entry.get()
+            data_do_voo = data_entry.get()
 
-            try:
-                data_do_voo = verifica_data(data_do_voo)
-                break
+            nova_janela.destroy()
+            self.operacao_pega_dados_altera_voo({
+                "partida": partida,
+                "destino": destino,
+                "data_do_voo": data_do_voo
+            })
 
-            except Exception:
-                print("Dado invalido, digite novamente!!!")
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
 
-        return {
-            "partida": partida,
-            "destino": destino,
-            "data_do_voo": data_do_voo,
-        }
+        nova_janela.mainloop()
 
-    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
-        print("-------- LOG DE AÇÕES ----------")
+    def mostra_registro(self, dados_aviao: dict):
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Log de Ações")
+
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='blue')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Log de Ações", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
         for index, valor in dados_aviao.items():
-            print(f" {index} : {valor} ")
-            print("--------------------------------")
+            registro_str = f"{index}: {valor}"
+            label_registro = customtkinter.CTkLabel(master=frame_principal, text=registro_str, font=('Tahoma', 12))
+            label_registro.pack(pady=5, padx=10, side='top')
+
+        nova_janela.mainloop()
 
     def mostra_voo(self, dados_voo: dict):
-        for chave, valor in dados_voo.items():
-            print(f"{chave}: {valor}")
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
 
-        print("\n")
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='blue')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
 
-    def seleciona_voo(self):
-        codigo = input("Insira o código do voo que deseja selecionar: ").upper()
-        return codigo
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        for index, valor in dados_voo.items():
+            registro_str = f"{index}: {valor}"
+            label_registro = customtkinter.CTkLabel(master=frame_principal, text=registro_str, font=('Tahoma', 12))
+            label_registro.pack(pady=5, padx=10, side='top')
+
+        nova_janela.mainloop()
+
+    def seleciona_voo(self) -> str:
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.title("Selecionar Voo")
+
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='blue')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Selecionar Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        codigo_entry = customtkinter.CTkEntry(master=frame_principal, text="Insira o código do voo que deseja selecionar:")
+        codigo_entry.pack(pady=10, padx=10)
+
+        def confirmar():
+            codigo = codigo_entry.get()
+            nova_janela.destroy()
+            self.operacao_seleciona_voo(codigo)
+
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
+
+        nova_janela.mainloop()
+

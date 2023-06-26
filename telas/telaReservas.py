@@ -31,7 +31,7 @@ class TelaReservas(AbstractTela):
 
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
-        nova_janela.geometry('500x600')
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
         nova_janela.title("Tela Reservas")
 
         opcao_selecionada = None
@@ -55,99 +55,289 @@ class TelaReservas(AbstractTela):
 
         return opcao_selecionada
 
+
     def pega_cpf(self, alterando=False):
-        while True:
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 300, 500))
+        nova_janela.title("CPF do Passageiro")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de instrução
+        label_instrucao = customtkinter.CTkLabel(master=frame_principal, text="Digite o CPF do passageiro:", font=('Tahoma', 14))
+        label_instrucao.pack(pady=10)
+
+        # Entrada de texto
+        entry_cpf = customtkinter.CTkEntry(master=frame_principal, placeholder_text="CPF", width=200)
+        entry_cpf.pack(pady=5)
+
+        # Função de retorno
+        def confirmar():
+            cpf = entry_cpf.get().strip()
+
             try:
-                cpf = input("Digite o CPF do passageiro: ").strip()
-
-                if not cpf and alterando:
-                    return cpf
-
                 self.verica_cpf(cpf)
-                return cpf
+                nova_janela.destroy()
 
             except Exception as e:
-                print(str(e))
+                mensagem_erro = customtkinter.CTkLabel(master=frame_principal, text=str(e), font=('Tahoma', 12))
+                mensagem_erro.pack(pady=10)
+                mensagem_erro.after(3000, lambda: mensagem_erro.destroy())
+                nova_janela.after(3000, lambda: nova_janela.destroy(), self.mostra_opcoes())
+
+        # Botão de confirmação
+        button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
+        button_confirmar.pack(pady=10)
+
+        nova_janela.mainloop()
 
     def verica_cpf(self, cpf):
         if not cpf.isdigit():
             raise Exception("O CPF deve ser composto por dígitos!")
 
     def pega_voo(self):
-        while True:
-            codigo_voo = input("Digite o código do Voo: ").upper().strip()
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
 
-            if codigo_voo:
-                return codigo_voo
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.title("Código do Voo")
 
-            else:
-                print("Dado invalido, digite novamente!!!")
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de instrução
+        label_instrucao = customtkinter.CTkLabel(master=frame_principal, text="Digite o código do Voo:", font=('Tahoma', 14))
+        label_instrucao.pack(pady=10)
+
+        # Entrada de texto
+        entry_codigo_voo = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Código do Voo", width=200)
+        entry_codigo_voo.pack(pady=5)
+
+        # Função de retorno
+        def confirmar():
+            codigo_voo = entry_codigo_voo.get().strip()
+            nova_janela.destroy()
+            self.operacao_pega_voo(codigo_voo)
+
+        # Botão de confirmação
+        button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
+        button_confirmar.pack(pady=10)
+
+        nova_janela.mainloop()
 
     def pega_fileira(self, alterando=False):
-        while True:
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.title("Número da Fileira")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de instrução
+        label_instrucao = customtkinter.CTkLabel(master=frame_principal, text="Digite o número da fileira desejada:", font=('Tahoma', 14))
+        label_instrucao.pack(pady=10)
+
+        # Entrada de texto
+        entry_fileira = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Número da Fileira", width=200)
+        entry_fileira.pack(pady=5)
+
+        # Função de retorno
+        def confirmar():
+            fileira = entry_fileira.get().strip()
+
             try:
-                fileira = input("Digite o número da fileira desejada: ").strip()
-
                 if not fileira and alterando:
-                    return 0
-
-                if not fileira:
-                    raise Exception("O campo nao pode ser vazio!")
-
-                if not fileira.isdigit():
-                    raise Exception("A fileira deve ser composta por números!")
-
-                if int(fileira) < 1:
-                    raise Exception("A fileira deve ser maior que 1!")
-
-                return int(fileira)
+                    nova_janela.destroy()
+                    self.operacao_pega_fileira(0, alterando)
+                else:
+                    self.verica_fileira(fileira)
+                    nova_janela.destroy()
+                    self.operacao_pega_fileira(int(fileira), alterando)
 
             except Exception as e:
-                print(str(e))
+                mensagem_erro = customtkinter.CTkLabel(master=frame_principal, text=str(e), font=('Tahoma', 12))
+                mensagem_erro.pack(pady=10)
+
+        # Botão de confirmação
+        button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
+        button_confirmar.pack(pady=10)
+
+        nova_janela.mainloop()
+
+    def verica_fileira(self, fileira):
+        if not fileira.isdigit():
+            raise Exception("A fileira deve ser composta por números!")
+
+        if int(fileira) < 1:
+            raise Exception("A fileira deve ser maior que 1!")
 
     def pega_assento_fileira(self, alterando=False):
-        while True:
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.title("Letra do Assento")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de instrução
+        label_instrucao = customtkinter.CTkLabel(master=frame_principal, text="Digite a letra do assento desejado:", font=('Tahoma', 14))
+        label_instrucao.pack(pady=10)
+
+        # Entrada de texto
+        entry_assento = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Letra do Assento", width=200)
+        entry_assento.pack(pady=5)
+
+        # Função de retorno
+        def confirmar():
+            assento = entry_assento.get().strip()
+
             try:
-                assento = input("Digite a letra do assento desejado: ").upper().strip()
-
                 if not assento and alterando:
-                    return ""
-
-                if not assento:
-                    raise Exception("O campo nao pode ser vazio!")
-
-                if assento not in string.ascii_uppercase:
-                    raise Exception("O campo assento deve ser uma letra!")
-
-                return assento
+                    nova_janela.destroy()
+                    self.operacao_pega_assento_fileira("", alterando)
+                else:
+                    self.verica_assento_fileira(assento)
+                    nova_janela.destroy()
+                    self.operacao_pega_assento_fileira(assento, alterando)
 
             except Exception as e:
-                print(str(e))
+                mensagem_erro = customtkinter.CTkLabel(master=frame_principal, text=str(e), font=('Tahoma', 12))
+                mensagem_erro.pack(pady=10)
+
+        # Botão de confirmação
+        button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
+        button_confirmar.pack(pady=10)
+
+        nova_janela.mainloop()
+
+    def verica_assento_fileira(self, assento):
+        if assento not in string.ascii_uppercase:
+            raise Exception("O campo assento deve ser uma letra!")
 
     def mostra_reserva(self, dados_reserva: "dict[str, str]"):
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Reserva")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de título
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Reserva:", font=('Tahoma', 20))
+        label_titulo.pack(pady=10)
+
+        # Criar um frame para os registros
+        frame_registros = customtkinter.CTkFrame(master=frame_principal)
+        frame_registros.pack(pady=10, padx=10, side='top', fill="both", expand=True)
+
+        # Exibir os registros
         for chave, valor in dados_reserva.items():
-            print(f"{chave}: {valor}")
+            reserva_str = f"{chave}: {valor}"
+            label_registro = customtkinter.CTkLabel(master=frame_registros, text=reserva_str, font=('Tahoma', 14))
+            label_registro.pack(pady=5, padx=10, side='top', fill="both", expand=True)
 
-        print("\n")
+        nova_janela.mainloop()
 
-    def mostra_assentos_voo(self, voo: Voo):
-        print("{:<1} ".format(""), end="")
+    def mostra_assentos_voo(self, voo):
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Assentos do Voo")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de título
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Assentos do Voo:", font=('Tahoma', 20))
+        label_titulo.pack(pady=10)
+
+        # Criar um frame para exibir os assentos
+        frame_assentos = customtkinter.CTkFrame(master=frame_principal)
+        frame_assentos.pack(pady=10, padx=10, side='top', fill="both", expand=True)
+
+        # Cabeçalho das colunas
+        label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text="{:<1}".format(""), font=('Tahoma', 14))
+        label_cabecalho.pack(side='top')
 
         for i in range(voo.aviao.assentos_por_fileira):
-            print("[{:^1}] | ".format(string.ascii_uppercase[i]), end="")
-        print()
+            label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text="[{:1}] |".format(string.ascii_uppercase[i]), font=('Tahoma', 14))
+            label_cabecalho.pack(side='top')
 
+        # Exibir os assentos
         for i in range(voo.aviao.fileiras):
-            print("{} ".format(i + 1), end="")
+            label_fileira = customtkinter.CTkLabel(master=frame_assentos, text="{} ".format(i + 1), font=('Tahoma', 14))
+            label_fileira.pack(side='top')
 
             for j in range(voo.aviao.assentos_por_fileira):
-                print("[{:^1}] | ".format(voo.assentos[i][j]), end="")
+                label_assento = customtkinter.CTkLabel(master=frame_assentos, text="[{:1}] |".format(voo.assentos[i][j]), font=('Tahoma', 14))
+                label_assento.pack(side='top')
 
-            print()
+        nova_janela.mainloop()
 
     def seleciona_reserva(self) -> str:
-        codigo_reserva = (
-            input("Insira o código da reserva que deseja buscar: ").upper().strip()
-        )
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
 
-        return codigo_reserva
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.title("Código da Reserva")
+
+        # Criar o frame principal
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        # Label de instrução
+        label_instrucao = customtkinter.CTkLabel(master=frame_principal, text="Insira o código da reserva que deseja buscar:", font=('Tahoma', 14))
+        label_instrucao.pack(pady=10)
+
+        # Entrada de texto
+        entry_codigo_reserva = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Código da Reserva", width=200)
+        entry_codigo_reserva.pack(pady=5)
+
+        # Função de retorno
+        def confirmar():
+            codigo_reserva = entry_codigo_reserva.get().strip()
+            nova_janela.destroy()
+            self.operacao_seleciona_reserva(codigo_reserva)
+
+        # Botão de confirmação
+        button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
+        button_confirmar.pack(pady=10)
+
+        nova_janela.mainloop()
