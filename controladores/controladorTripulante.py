@@ -1,22 +1,27 @@
+import datetime
 from entidades.tripulante import Tripulante
 from telas.telaTripulante import TelaTripulante
 from excepitions.tripulanteJahExisteException import TripulanteJahExisteException
 from entidades.registro import Registro
-import datetime
+from DAOs.tripulante_dao import TripulanteDAO
 
 
 class ControladorTripulante:
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_tripulante = TelaTripulante()
-        self.__tripulantes: list[Tripulante] = []
+        self.__tripulantes_dao = TripulanteDAO()
         self.registros: list[Registro] = []
+
+    @property
+    def tripulantes(self):
+        return self.__tripulantes_dao.get_all()
 
     def adicionar_registro(self, registro):
         self.registros.append(registro)
 
     def buscar_tripulante_por_cpf(self, cpf):
-        for tripulante in self.__tripulantes:
+        for tripulante in self.tripulantes:
             if tripulante.cpf == cpf:
                 return tripulante
         return None
@@ -28,7 +33,7 @@ class ControladorTripulante:
                 break
 
             try:
-                for tripulante in self.__tripulantes:
+                for tripulante in self.tripulantes:
                     if tripulante.cpf == dados_tripulante["cpf"]:
                         raise TripulanteJahExisteException
 
@@ -39,7 +44,7 @@ class ControladorTripulante:
                     dados_tripulante["telefone"],
                     dados_tripulante["cargo"],
                 )
-                self.__tripulantes.append(novo_tripulante)
+                self.__tripulantes_dao.add(novo_tripulante)
 
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -62,7 +67,7 @@ class ControladorTripulante:
 
     def alterar_tripulante(self):
         self.listar_tripulantes_nome_cpf_cargo()
-        if not self.__tripulantes:
+        if not self.tripulantes:
             return
 
         cpf = self.__tela_tripulante.seleciona_tripulante_por_cpf()
@@ -102,6 +107,8 @@ class ControladorTripulante:
                 if dados_tripulante["cargo"]:
                     tripulante.cargo = dados_tripulante["cargo"]
 
+                self.__tripulantes_dao.update(tripulante)
+
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 descricao = (
@@ -120,10 +127,10 @@ class ControladorTripulante:
                 )
 
     def listar_tripulantes(self):
-        if not self.__tripulantes:
+        if not self.tripulantes:
             self.__tela_tripulante.mostra_mensagem("Nenhum tripulante cadastrado!!!")
         else:
-            for tripulante in self.__tripulantes:
+            for tripulante in self.tripulantes:
                 self.__tela_tripulante.mostra_tripulante(
                     {
                         "Nome": tripulante.nome,
@@ -135,10 +142,10 @@ class ControladorTripulante:
                 )
 
     def listar_tripulantes_nome_cpf_cargo(self):
-        if not self.__tripulantes:
+        if not self.tripulantes:
             self.__tela_tripulante.mostra_mensagem("Nenhum tripulante cadastrado!!!")
         else:
-            for tripulante in self.__tripulantes:
+            for tripulante in self.tripulantes:
                 self.__tela_tripulante.mostra_tripulante(
                     {
                         "tripulante": tripulante.nome,
@@ -157,7 +164,7 @@ class ControladorTripulante:
                 if self.__tela_tripulante.confirma_opcao(
                     "Deseja realmente excluir este tripulante?"
                 ):
-                    self.__tripulantes.remove(tripulante)
+                    self.__tripulantes_dao.remove(tripulante.cpf)
 
                     # Registro automático no histórico
                     data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

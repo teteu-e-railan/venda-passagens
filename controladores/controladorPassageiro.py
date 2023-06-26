@@ -1,22 +1,27 @@
+import datetime
 from entidades.passageiro import Passageiro
 from telas.telaPassageiro import TelaPassagerio
 from excepitions.passageiroJahExisteException import PassageiroJahExisteException
 from entidades.registro import Registro
-import datetime
+from DAOs.passageiro_dao import PassageiroDAO
 
 
 class ControladorPassageiro:
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_passageiro = TelaPassagerio()
-        self.__passageiros: list[Passageiro] = []
+        self.__passageiros_dao = PassageiroDAO()
         self.registros: list[Registro] = []
+
+    @property
+    def passageiros(self):
+        return self.__passageiros_dao.get_all()
 
     def adicionar_registro(self, registro):
         self.registros.append(registro)
 
     def buscar_passageiro_por_cpf(self, cpf):
-        for passageiro in self.__passageiros:
+        for passageiro in self.passageiros:
             if passageiro.cpf == cpf:
                 return passageiro
         return None
@@ -28,7 +33,7 @@ class ControladorPassageiro:
                 break
 
             try:
-                for passageiro in self.__passageiros:
+                for passageiro in self.passageiros:
                     if passageiro.cpf == dados_passageiro["cpf"]:
                         raise PassageiroJahExisteException
 
@@ -38,7 +43,7 @@ class ControladorPassageiro:
                     dados_passageiro["idade"],
                     dados_passageiro["telefone"],
                 )
-                self.__passageiros.append(novo_passageiro)
+                self.__passageiros_dao.add(novo_passageiro)
 
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -61,7 +66,7 @@ class ControladorPassageiro:
 
     def alterar_passageiro(self):
         self.listar_passageiros_nome_cpf()
-        if not self.__passageiros:
+        if not self.passageiros:
             return
         cpf = self.__tela_passageiro.seleciona_passageiro_por_cpf()
         passageiro = self.buscar_passageiro_por_cpf(cpf)
@@ -96,6 +101,8 @@ class ControladorPassageiro:
                 if dados_passageiro["telefone"]:
                     passageiro.telefone = dados_passageiro["telefone"]
 
+                self.__passageiros_dao.update(passageiro)
+
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 descricao = f"Alteração do passageiro: {passageiro.nome, passageiro.cpf, passageiro.idade, passageiro.telefone,}"
@@ -112,10 +119,10 @@ class ControladorPassageiro:
                 )
 
     def listar_passageiros(self):
-        if not self.__passageiros:
+        if not self.passageiros:
             self.__tela_passageiro.mostra_mensagem("Nenhum passageiro cadastrado!!!")
         else:
-            for passageiro in self.__passageiros:
+            for passageiro in self.passageiros:
                 self.__tela_passageiro.mostra_passageiro(
                     {
                         "Nome": passageiro.nome,
@@ -126,11 +133,11 @@ class ControladorPassageiro:
                 )
 
     def listar_passageiros_nome_cpf(self):
-        if not self.__passageiros:
+        if not self.passageiros:
             self.__tela_passageiro.mostra_mensagem("Nenhum passageiro cadastrado!!!")
 
         else:
-            for passageiro in self.__passageiros:
+            for passageiro in self.passageiros:
                 self.__tela_passageiro.mostra_passageiro(
                     {
                         "Passageiro": passageiro.nome,
@@ -148,7 +155,7 @@ class ControladorPassageiro:
                 if self.__tela_passageiro.confirma_opcao(
                     "Deseja realmente excluir este passageiro?"
                 ):
-                    self.__passageiros.remove(passageiro)
+                    self.__passageiros_dao.remove(passageiro.cpf)
                     # Registro automático no histórico
                     data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     descricao = f"Exclusão do passageiro: {passageiro.nome}"
