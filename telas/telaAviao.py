@@ -14,12 +14,11 @@ class TelaAviao(AbstractTela):
                 0: "Voltar",
             }
         )
-
-    def mostra_opcoes(self) -> int:
         # Configurações da interface gráfica
         customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
+        customtkinter.set_default_color_theme('blue')
 
+    def mostra_opcoes(self) -> int:
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -47,10 +46,6 @@ class TelaAviao(AbstractTela):
         return opcao_selecionada
 
     def pega_dados_aviao(self):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -245,10 +240,6 @@ class TelaAviao(AbstractTela):
 
 
     def mostra_registro(self, dados_aviao):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('blue')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -275,7 +266,7 @@ class TelaAviao(AbstractTela):
                 registro_str = f"{index}: {valor}"
                 label_registro = customtkinter.CTkLabel(master=frame_registros, text=registro_str, font=('Tahoma', 14))
                 label_registro.pack(pady=5, padx=10, side='top', fill="both", expand=True)
-        botao_voltar = customtkinter.CTkButton(master=frame_principal, text="Voltar", command=nova_janela.destroy)
+        botao_voltar = customtkinter.CTkButton(master=frame_principal, text="OK", command=nova_janela.destroy)
         botao_voltar.pack(pady=10)
         nova_janela.mainloop()
 

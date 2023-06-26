@@ -14,13 +14,12 @@ class TelaPassagerio(AbstractTela):
                 0: "Voltar",
             }
         )
-
-
-    def mostra_opcoes(self) -> int:
         # Configurações da interface gráfica
         customtkinter.set_appearance_mode('dark')
         customtkinter.set_default_color_theme('green')
 
+
+    def mostra_opcoes(self) -> int:
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela,500, 600))
@@ -48,10 +47,6 @@ class TelaPassagerio(AbstractTela):
         return opcao_selecionada
 
     def pega_dados_passageiro(self):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela,500, 600))
@@ -141,10 +136,6 @@ class TelaPassagerio(AbstractTela):
         return dados
 
     def altera_dados_passageiro(self):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela,500, 600))
@@ -233,10 +224,6 @@ class TelaPassagerio(AbstractTela):
         return dados
 
     def mostra_registro(self, dados_aviao):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('blue')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -251,7 +238,7 @@ class TelaPassagerio(AbstractTela):
             label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Sem registros encontrados", font=('Tahoma', 14))
             label_mensagem.pack(pady=50, padx=10, side='top', fill="both", expand=True)
         else:
-            label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Registros de Avião", font=('Tahoma', 20))
+            label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Registros de Passageiros", font=('Tahoma', 20))
             label_titulo.pack(pady=12, padx=10, side='top', fill="both", expand=True)
 
             # Criar um frame para os registros
@@ -263,15 +250,11 @@ class TelaPassagerio(AbstractTela):
                 registro_str = f"{index}: {valor}"
                 label_registro = customtkinter.CTkLabel(master=frame_registros, text=registro_str, font=('Tahoma', 14))
                 label_registro.pack(pady=5, padx=10, side='top', fill="both", expand=True)
-        botao_voltar = customtkinter.CTkButton(master=frame_principal, text="Voltar", command=nova_janela.destroy)
+        botao_voltar = customtkinter.CTkButton(master=frame_principal, text="OK", command=nova_janela.destroy)
         botao_voltar.pack(pady=10)
         nova_janela.mainloop()
 
     def mostra_passageiro(self, dados_passageiro):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -317,7 +300,7 @@ class TelaPassagerio(AbstractTela):
         nova_janela.title("Selecionar Passageiro por CPF")
 
         frame = customtkinter.CTkFrame(master=nova_janela, corner_radius=10, border_width=4, border_color='green')
-        frame.pack(pady=20, padx=40)
+        frame.pack(pady=20, padx=60, fill='both', expand=True)
 
         label = customtkinter.CTkLabel(master=frame, text="CPF do passageiro que deseja selecionar:")
         label.pack(pady=10)
