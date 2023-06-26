@@ -23,7 +23,7 @@ class ControladorSistema(AbstractControllerSet):
         #     0: self.finaliza_sistema,
         # }
 
-        self.__controlador_reservas = ControladorReservas(self)
+        self.__controlador_reservas = ControladorReservas(self.parent)
         self.__controlador_passageiros = ControladorPassageiro(self)
         self.__controlador_tripulantes = ControladorTripulante(self)
         self.__controlador_voos = ControladorVoo(self)
@@ -58,7 +58,7 @@ class ControladorSistema(AbstractControllerSet):
 
     def seleciona_opcao(self, index: int):
         opcoes_controlador = {
-            1: self.controlador_reservas.abre_tela,
+            1: self.controlador_reservas.start,
             2: self.controlador_passageiros.abre_tela,
             3: self.controlador_tripulantes.abre_tela,
             4: self.controlador_voos.abre_tela,
