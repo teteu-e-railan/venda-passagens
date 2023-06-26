@@ -1,22 +1,27 @@
+import datetime
 from entidades.aviao import Aviao
 from telas.telaAviao import TelaAviao
 from excepitions.aviaoJahExisteException import AviaoJahExisteException
 from entidades.registro import Registro
-import datetime
+from DAOs.aviao_dao import AviaoDAO
 
 
 class ControladorAviao:
     def __init__(self, controlador_sistema):
         self.__controlador_sistema = controlador_sistema
         self.__tela_aviao = TelaAviao()
-        self.__avioes: list[Aviao] = []
+        self.__avioes_dao = AviaoDAO()
         self.registros: list[Registro] = []
+
+    @property
+    def avioes(self):
+        return self.__avioes_dao.get_all()
 
     def adicionar_registro(self, registro):
         self.registros.append(registro)
 
     def buscar_aviao_por_modelo(self, modelo):
-        for aviao in self.__avioes:
+        for aviao in self.avioes:
             if aviao.modelo == modelo:
                 return aviao
         return None
@@ -27,7 +32,7 @@ class ControladorAviao:
             if dados_aviao is None:
                 break
             try:
-                for aviao in self.__avioes:
+                for aviao in self.avioes:
                     if aviao.modelo == dados_aviao["modelo"]:
                         raise AviaoJahExisteException
                 novo_aviao = Aviao(
@@ -35,7 +40,7 @@ class ControladorAviao:
                     dados_aviao["fileiras"],
                     dados_aviao["assentos_por_fileira"],
                 )
-                self.__avioes.append(novo_aviao)
+                self.__avioes_dao.add(novo_aviao)
 
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -51,7 +56,8 @@ class ControladorAviao:
 
     def alterar_aviao(self):
         self.listar_avioes()
-        if not self.__avioes:
+
+        if not self.avioes:
             return
 
         modelo = self.__tela_aviao.seleciona_aviao()
@@ -80,6 +86,8 @@ class ControladorAviao:
                 if dados_aviao["assentos_por_fileira"]:
                     aviao.assentos_por_fileira = dados_aviao["assentos_por_fileira"]
 
+                self.__avioes_dao.update(aviao)
+
                 # Registro automático no histórico
                 data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 descricao = f"Alteração de avião: {aviao.modelo}"
@@ -92,10 +100,10 @@ class ControladorAviao:
                 self.__tela_aviao.mostra_mensagem("Alteração de aviao cancelada!!!")
 
     def listar_avioes(self):
-        if not self.__avioes:
+        if not self.avioes:
             self.__tela_aviao.mostra_mensagem("Nenhum avião cadastrado!!!")
         else:
-            for aviao in self.__avioes:
+            for aviao in self.avioes:
                 self.__tela_aviao.mostra_aviao(
                     {
                         "Modelo": aviao.modelo,
@@ -105,7 +113,7 @@ class ControladorAviao:
 
     def excluir_aviao(self):
         while True:
-            self.__tela_aviao.mostra_modelo(self.__avioes)
+            self.__tela_aviao.mostra_modelo(self.avioes)
             modelo_aviao = self.__tela_aviao.seleciona_aviao()
             aviao = self.buscar_aviao_por_modelo(modelo_aviao)
 
@@ -113,7 +121,7 @@ class ControladorAviao:
                 if self.__tela_aviao.confirma_opcao(
                     "Deseja realmente excluir este avião?"
                 ):
-                    self.__avioes.remove(aviao)
+                    self.__avioes_dao.remove(aviao.modelo)
 
                     # Registro automático no histórico
                     data = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
