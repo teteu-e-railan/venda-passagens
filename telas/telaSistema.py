@@ -21,8 +21,8 @@ class TelaSistema(AbstractTela):
 
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
-        nova_janela.geometry('500x600')
-        nova_janela.title("Tela do sistema")
+        nova_janela.geometry(self.centralizar_janela(nova_janela,500, 600))
+        nova_janela.title("Tela Passageiro")
 
         opcao_selecionada = None
 
