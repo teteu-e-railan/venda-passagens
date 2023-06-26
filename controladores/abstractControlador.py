@@ -1,8 +1,7 @@
-from abc import abstractmethod, ABC
 from telas.abstractFrame import AbstractFrame
 
 
-class AbstractController(ABC):
+class AbstractController:
     """Classe abstrata para controladores que possuem uma tela."""
 
     STATE_INITIALIZED = 0
@@ -12,8 +11,7 @@ class AbstractController(ABC):
 
     VIEW_CLASS = AbstractFrame
 
-    @abstractmethod
-    def __init__(self, parent, view):
+    def __init__(self, parent, view=None):
         self.__parent = parent
         self.__view = view
 
