@@ -5,11 +5,11 @@ class TelaSistema(AbstractTela):
     def __init__(self):
         super().__init__(
             {
-                1: "Reservas",
+                1: "Aviões",
                 2: "Passageiros",
                 3: "Tripulantes",
                 4: "Voos",
-                5: "Aviões",
+                5: "Reservas",
                 0: "Finalizar Sistema",
             }
         )

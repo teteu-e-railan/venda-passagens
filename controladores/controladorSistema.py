@@ -44,11 +44,11 @@ class ControladorSistema:
 
     def abre_tela(self):
         opcoes_controlador = {
-            1: self.controlador_reservas.abre_tela,
+            1: self.controlador_avioes.abre_tela,
             2: self.controlador_passageiros.abre_tela,
             3: self.controlador_tripulantes.abre_tela,
             4: self.controlador_voos.abre_tela,
-            5: self.controlador_avioes.abre_tela,
+            5: self.controlador_reservas.abre_tela,
             0: self.finaliza_sistema,
         }
 

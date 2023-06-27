@@ -108,7 +108,7 @@ class ControladorVoo:
                     "Codigo": voo.codigo,
                     "Partida": voo.partida,
                     "Destino": voo.destino,
-                    "Data": voo.data_do_voo.strftime("%d/%m/%Y"),
+                    "Data": voo.data_do_voo,
                     "Modelo do Avião": voo.aviao.modelo,
                 }
             )

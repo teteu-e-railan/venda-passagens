@@ -261,7 +261,7 @@ class TelaAviao(AbstractTela):
             frame_registros = customtkinter.CTkFrame(master=frame_principal)
             frame_registros.pack(pady=10, padx=10, side='top', fill="both", expand=True)
 
-            # Exibir os registros
+            # Exibir os registros 
             for index, valor in dados_aviao.items():
                 registro_str = f"{index}: {valor}"
                 label_registro = customtkinter.CTkLabel(master=frame_registros, text=registro_str, font=('Tahoma', 14))
@@ -326,15 +326,16 @@ class TelaAviao(AbstractTela):
         # Entrada de texto
         entry_modelo = ctk.CTkEntry(master=frame_principal, placeholder_text="Modelo", width=200)
         entry_modelo.pack(pady=5)
-
+        modelo = ""
         # Função de retorno
         def confirmar():
+            nonlocal modelo
             modelo = entry_modelo.get().strip()
             nova_janela.destroy()
-            self.operacao_seleciona_aviao(modelo)
 
         # Botão de confirmação
         button_confirmar = ctk.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+        return modelo
