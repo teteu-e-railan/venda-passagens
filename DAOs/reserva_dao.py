@@ -22,11 +22,11 @@ class ReservaDAO(DAO):
         ):
             super().update(reserva.codigo, reserva)
 
-    def get(self, key: str) -> Reserva | None:
+    def get(self, key: str) -> "Reserva | None":
         if isinstance(key, str):
             return super().get(key)
 
-    def get_all(self) -> list[Reserva]:
+    def get_all(self) -> "list[Reserva]":
         return list(super().get_all())
 
     def remove(self, key: str):

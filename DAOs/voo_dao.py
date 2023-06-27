@@ -14,11 +14,11 @@ class VooDAO(DAO):
         if (voo is not None) and isinstance(voo, Voo) and isinstance(voo.codigo, str):
             super().update(voo.codigo, voo)
 
-    def get(self, key: str) -> Voo | None:
+    def get(self, key: str) -> "Voo | None":
         if isinstance(key, str):
             return super().get(key)
 
-    def get_all(self) -> list[Voo]:
+    def get_all(self) -> "list[Voo]":
         return list(super().get_all())
 
     def remove(self, key: str):
