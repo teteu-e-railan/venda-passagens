@@ -314,8 +314,3 @@ class TelaPassagerio(AbstractTela):
         nova_janela.mainloop()
 
         return cpf_selecionado
-
-
-    # Botão "Voltar"
-    def voltar(self, nova_janela,):
-        nova_janela.after(1000, nova_janela.destroy(),lambda: self.mostra_opcoes())

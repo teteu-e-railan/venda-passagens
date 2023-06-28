@@ -23,12 +23,11 @@ class TelaReservas(AbstractTela):
                 0: "Retornar",
             }
         )
-
-    def mostra_opcoes(self) -> int:
         # Configurações da interface gráfica
         customtkinter.set_appearance_mode('dark')
         customtkinter.set_default_color_theme('green')
 
+    def mostra_opcoes(self) -> int:
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
@@ -56,11 +55,7 @@ class TelaReservas(AbstractTela):
         return opcao_selecionada
 
 
-    def pega_cpf(self, alterando=False):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
+    def pega_cpf(self):
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 300, 500))
@@ -77,9 +72,9 @@ class TelaReservas(AbstractTela):
         # Entrada de texto
         entry_cpf = customtkinter.CTkEntry(master=frame_principal, placeholder_text="CPF", width=200)
         entry_cpf.pack(pady=5)
-
         # Função de retorno
         def confirmar():
+            global cpf
             cpf = entry_cpf.get().strip()
 
             try:
@@ -97,6 +92,7 @@ class TelaReservas(AbstractTela):
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+        return cpf
 
     def verica_cpf(self, cpf):
         if not cpf.isdigit():
@@ -126,15 +122,26 @@ class TelaReservas(AbstractTela):
 
         # Função de retorno
         def confirmar():
+            global codigo_voo
             codigo_voo = entry_codigo_voo.get().strip()
-            nova_janela.destroy()
-            self.operacao_pega_voo(codigo_voo)
+            
+            if not codigo_voo:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Codigo inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=30)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy(), self.mostra_opcoes())
+                return
+            
+            label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Dados inseridos com sucesso!", font=('Tahoma', 20))
+            label_mensagem.pack(pady=50)
+            nova_janela.update_idletasks()
+            nova_janela.after(1000, nova_janela.destroy(),lambda: self.mostra_opcoes())
 
         # Botão de confirmação
         button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+        return codigo_voo
 
     def pega_fileira(self, alterando=False):
         # Configurações da interface gráfica
@@ -160,16 +167,17 @@ class TelaReservas(AbstractTela):
 
         # Função de retorno
         def confirmar():
+            global fileira
             fileira = entry_fileira.get().strip()
 
             try:
                 if not fileira and alterando:
                     nova_janela.destroy()
-                    self.operacao_pega_fileira(0, alterando)
+                    self.pega_fileira(0, alterando)
                 else:
                     self.verica_fileira(fileira)
                     nova_janela.destroy()
-                    self.operacao_pega_fileira(int(fileira), alterando)
+                    self.pega_fileira(int(fileira), alterando)
 
             except Exception as e:
                 mensagem_erro = customtkinter.CTkLabel(master=frame_principal, text=str(e), font=('Tahoma', 12))
@@ -180,7 +188,8 @@ class TelaReservas(AbstractTela):
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
-
+        return int(fileira)
+    
     def verica_fileira(self, fileira):
         if not fileira.isdigit():
             raise Exception("A fileira deve ser composta por números!")
@@ -212,16 +221,17 @@ class TelaReservas(AbstractTela):
 
         # Função de retorno
         def confirmar():
+            global assento
             assento = entry_assento.get().strip()
 
             try:
                 if not assento and alterando:
                     nova_janela.destroy()
-                    self.operacao_pega_assento_fileira("", alterando)
+                    self.pega_assento_fileira("", alterando)
                 else:
                     self.verica_assento_fileira(assento)
                     nova_janela.destroy()
-                    self.operacao_pega_assento_fileira(assento, alterando)
+                    self.pega_assento_fileira(assento, alterando)
 
             except Exception as e:
                 mensagem_erro = customtkinter.CTkLabel(master=frame_principal, text=str(e), font=('Tahoma', 12))
@@ -232,6 +242,7 @@ class TelaReservas(AbstractTela):
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+        return assento
 
     def verica_assento_fileira(self, assento):
         if assento not in string.ascii_uppercase:
@@ -268,13 +279,9 @@ class TelaReservas(AbstractTela):
         nova_janela.mainloop()
 
     def mostra_assentos_voo(self, voo):
-        # Configurações da interface gráfica
-        customtkinter.set_appearance_mode('dark')
-        customtkinter.set_default_color_theme('green')
-
         # Criar uma nova janela
         nova_janela = customtkinter.CTk()
-        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 300, 800))
         nova_janela.title("Assentos do Voo")
 
         # Criar o frame principal
@@ -290,23 +297,62 @@ class TelaReservas(AbstractTela):
         frame_assentos.pack(pady=10, padx=10, side='top', fill="both", expand=True)
 
         # Cabeçalho das colunas
-        label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text="{:<1}".format(""), font=('Tahoma', 14))
-        label_cabecalho.pack(side='top')
+        label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text=" ", font=('Tahoma', 14))
+        label_cabecalho.pack(side='left')
 
         for i in range(voo.aviao.assentos_por_fileira):
-            label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text="[{:1}] |".format(string.ascii_uppercase[i]), font=('Tahoma', 14))
-            label_cabecalho.pack(side='top')
+            label_cabecalho = customtkinter.CTkLabel(master=frame_assentos, text=string.ascii_uppercase[i], font=('Tahoma', 14))
+            label_cabecalho.pack(side='left')
 
         # Exibir os assentos
+        assentos_selecionados = []
+
+        def confirmar():
+            nonlocal assentos_selecionados
+            assentos_selecionados = []
+
+            # Percorrer todos os checkboxes e verificar os selecionados
+            for fileira, fileira_checkboxes in enumerate(assentos_checkboxes):
+                for coluna, checkbox in enumerate(fileira_checkboxes):
+                    if checkbox.is_checked():
+                        assento = f"{fileira + 1}{string.ascii_uppercase[coluna]}"
+                        assentos_selecionados.append(assento)
+
+            if len(assentos_selecionados) > 0:
+                customtkinter.messagebox.showinfo("Assentos Selecionados", f"Assentos selecionados: {', '.join(assentos_selecionados)}")
+            else:
+                customtkinter.messagebox.showinfo("Nenhum Assento Selecionado", "Nenhum assento foi selecionado.")
+
+        assentos_checkboxes = []
+
         for i in range(voo.aviao.fileiras):
-            label_fileira = customtkinter.CTkLabel(master=frame_assentos, text="{} ".format(i + 1), font=('Tahoma', 14))
-            label_fileira.pack(side='top')
+            frame_fileira = customtkinter.CTkFrame(master=frame_assentos)
+            frame_fileira.pack(side='top')
+
+            label_fileira = customtkinter.CTkLabel(master=frame_fileira, text=str(i + 1), font=('Tahoma', 14))
+            label_fileira.pack(side='left')
+
+            fileira_checkboxes = []
 
             for j in range(voo.aviao.assentos_por_fileira):
-                label_assento = customtkinter.CTkLabel(master=frame_assentos, text="[{:1}] |".format(voo.assentos[i][j]), font=('Tahoma', 14))
-                label_assento.pack(side='top')
+                assento_checkbox = customtkinter.CTkCheckBox(master=frame_fileira, text=string.ascii_uppercase[j], width=10)
+                assento_checkbox.pack(side='left')
+
+                fileira_checkboxes.append(assento_checkbox)
+
+            assentos_checkboxes.append(fileira_checkboxes)
+
+        # Botão de confirmar
+        btn_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        btn_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+
+        return assentos_selecionados
+
+
+
+
 
     def seleciona_reserva(self) -> str:
         # Configurações da interface gráfica
@@ -332,12 +378,23 @@ class TelaReservas(AbstractTela):
 
         # Função de retorno
         def confirmar():
+            global codigo_reserva
             codigo_reserva = entry_codigo_reserva.get().strip()
-            nova_janela.destroy()
-            self.operacao_seleciona_reserva(codigo_reserva)
+            
+            if not codigo_reserva:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Codigo inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=30)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy(), self.mostra_opcoes())
+                return
+        
+            label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Dados inseridos com sucesso!", font=('Tahoma', 20))
+            label_mensagem.pack(pady=50)
+            nova_janela.update_idletasks()
+            nova_janela.after(1000, nova_janela.destroy(),lambda: self.mostra_opcoes())
 
         # Botão de confirmação
         button_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar, width=10)
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
+        return codigo_reserva

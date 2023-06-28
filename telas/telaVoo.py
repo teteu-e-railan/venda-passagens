@@ -214,7 +214,6 @@ class TelaVoo(AbstractTela):
             registro_str = f"{index}: {valor}"
             label_registro = customtkinter.CTkLabel(master=frame_principal, text=registro_str, font=('Tahoma', 12))
             label_registro.pack(pady=5, padx=10, side='top')
-        
         botao_voltar = customtkinter.CTkButton(master=frame_principal, text="OK", command=nova_janela.destroy)
         botao_voltar.pack(pady=10)
         nova_janela.mainloop()
@@ -249,7 +248,6 @@ class TelaVoo(AbstractTela):
 
 
     def seleciona_voo(self) -> str:
-
         codigo_selecionado = ""
 
         def confirmar():
@@ -258,7 +256,7 @@ class TelaVoo(AbstractTela):
             nova_janela.destroy()
 
         nova_janela = customtkinter.CTk()
-        nova_janela.geometry(self.centralizar_janela(nova_janela, 200, 500))
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 240, 500))
         nova_janela.title("Selecionar Voo")
 
         frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
@@ -267,7 +265,7 @@ class TelaVoo(AbstractTela):
         label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Selecionar Voo", font=('Tahoma', 16))
         label_titulo.pack(pady=12, padx=10, side='top')
 
-        codigo_entry = customtkinter.CTkEntry(master=frame_principal, text="Insira o código do voo que deseja selecionar:")
+        codigo_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Insira o código do voo que deseja selecionar:", width=120)
         codigo_entry.pack(pady=10, padx=10)
 
         botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)

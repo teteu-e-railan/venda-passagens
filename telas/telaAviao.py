@@ -111,7 +111,7 @@ class TelaAviao(AbstractTela):
         return dados
 
 
-    def altera_dados_passageiro(self):
+    def altera_dados_aviao(self):
         # Configurações da interface gráfica
         ctk.set_appearance_mode('dark')
         ctk.set_default_color_theme('green')
@@ -119,90 +119,67 @@ class TelaAviao(AbstractTela):
         # Criar uma nova janela
         nova_janela = ctk.CTk()
         nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
-        nova_janela.title("Tela Passageiro")
+        nova_janela.title("Tela Aviao")
 
         dados = {}
 
         def confirmar():
             nonlocal dados
-            nome = entry_nome.get().strip()
-            cpf = entry_cpf.get().strip()
-            idade = entry_idade.get().strip()
-            telefone = entry_telefone.get().strip()
+            modelo = entry_modelo.get().strip().upper()
+            fileiras = entry_fileiras.get().strip()
+            assentos_por_fileira = entry_assentos.get().strip()
 
             # Validar os dados
-            if not nome:
-                label_mensagem = ctk.CTkLabel(master=frame, text="Nome inválido, digite novamente!", font=('Tahoma', 12))
+            if not modelo:
+                label_mensagem = customtkinter.CTkLabel(master=frame, text="Modelo inválido, digite novamente!", font=('Tahoma', 12))
                 label_mensagem.pack(pady=30)
                 label_mensagem.after(4000, lambda: label_mensagem.destroy())
                 return
 
-            try:
-                int(cpf)
-            except ValueError:
-                label_mensagem = ctk.CTkLabel(master=frame, text="CPF inválido, digite novamente!", font=('Tahoma', 12))
+            if not fileiras or not fileiras.isdigit():
+                label_mensagem = customtkinter.CTkLabel(master=frame, text="Número de fileiras inválido, digite novamente!", font=('Tahoma', 12))
                 label_mensagem.pack(pady=10)
                 label_mensagem.after(4000, lambda: label_mensagem.destroy())
                 return
 
-            if not idade:
-                label_mensagem = ctk.CTkLabel(master=frame, text="Idade inválida, digite novamente!", font=('Tahoma', 12))
+            if not assentos_por_fileira or not assentos_por_fileira.isdigit():
+                label_mensagem = customtkinter.CTkLabel(master=frame, text="Número de assentos por fileira inválido, digite novamente!", font=('Tahoma', 12))
                 label_mensagem.pack(pady=10)
                 label_mensagem.after(4000, lambda: label_mensagem.destroy())
-                return
-
-            try:
-                int(idade)
-            except ValueError:
-                label_mensagem = ctk.CTkLabel(master=frame, text="Idade inválida, digite novamente!", font=('Tahoma', 12))
-                label_mensagem.pack(pady=10)
-                label_mensagem.after(4000, lambda: label_mensagem.destroy())
-                return
-
-            try:
-                int(telefone)
-            except ValueError:
-                label_mensagem = ctk.CTkLabel(master=frame, text="Telefone inválido, digite novamente!", font=('Tahoma', 12))
-                label_mensagem.pack(pady=10)
-                label_mensagem.after(1000, lambda: label_mensagem.destroy())
                 return
 
             # Armazenar os dados
-            dados["nome"] = nome
-            dados["cpf"] = cpf
-            dados["idade"] = idade
-            dados["telefone"] = telefone
+            dados["modelo"] = modelo
+            dados["fileiras"] = int(fileiras)
+            dados["assentos_por_fileira"] = int(assentos_por_fileira)
 
-            label_mensagem = ctk.CTkLabel(master=frame, text="Dados inseridos com sucesso!", font=('Tahoma', 20))
+            label_mensagem = customtkinter.CTkLabel(master=frame, text="Dados inseridos com sucesso!", font=('Tahoma', 20))
             label_mensagem.pack(pady=50)
             nova_janela.update_idletasks()
             nova_janela.after(1000, nova_janela.destroy(), lambda: self.mostra_opcoes())
 
-        frame = ctk.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
         frame.pack(pady=20, padx=60, fill='both', expand=True)
 
-        label = ctk.CTkLabel(master=frame, text="Alterar Dados do Passageiro", font=('Tahoma', 20))
-        label.pack(pady=12, padx=10, fill='both', expand=True)
+        label = customtkinter.CTkLabel(master=frame, text="Inserir Dados do Avião", font=('Tahoma', 20))
+        label.pack(pady=12, padx=10)
 
-        entry_nome = ctk.CTkEntry(master=frame, placeholder_text="Digite o nome", width=200)
-        entry_nome.pack(pady=5)
+        entry_modelo = customtkinter.CTkEntry(master=frame, placeholder_text="Digite o modelo", width=200)
+        entry_modelo.pack(pady=5)
 
-        entry_cpf = ctk.CTkEntry(master=frame, placeholder_text="Digite o CPF", width=200)
-        entry_cpf.pack(pady=5)
+        entry_fileiras = customtkinter.CTkEntry(master=frame, placeholder_text="Digite o número de fileiras", width=200)
+        entry_fileiras.pack(pady=5)
 
-        entry_idade = ctk.CTkEntry(master=frame, placeholder_text="Digite a idade", width=200)
-        entry_idade.pack(pady=5)
+        entry_assentos = customtkinter.CTkEntry(master=frame, placeholder_text="Digite o número de assentos por fileira", width=200)
+        entry_assentos.pack(pady=5)
 
-        entry_telefone = ctk.CTkEntry(master=frame, placeholder_text="Digite o telefone", width=200)
-        entry_telefone.pack(pady=5)
-
-        button_confirmar = ctk.CTkButton(master=frame, text="Confirmar", command=confirmar, width=10)
+        button_confirmar = customtkinter.CTkButton(master=frame, text="Confirmar", command=confirmar, width=10)
         button_confirmar.pack(pady=10)
 
         nova_janela.mainloop()
 
         return dados
-
+    
     def mostra_aviao(self, dados_aviao):
         # Configurações da interface gráfica
         ctk.set_appearance_mode('dark')
