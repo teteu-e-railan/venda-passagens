@@ -167,5 +167,5 @@ class ControladorAviao:
             0: self.retornar,
         }
         while True:
-            opcao = self.__tela_aviao.tela_opcoes()
+            opcao = self.__tela_aviao.mostra_opcoes()
             opcoes_controlador[opcao]()

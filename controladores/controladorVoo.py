@@ -108,7 +108,7 @@ class ControladorVoo:
                     "Codigo": voo.codigo,
                     "Partida": voo.partida,
                     "Destino": voo.destino,
-                    "Data": voo.data_do_voo.strftime("%d/%m/%Y"),
+                    "Data": voo.data_do_voo,
                     "Modelo do Avião": voo.aviao.modelo,
                 }
             )
@@ -170,5 +170,5 @@ class ControladorVoo:
         }
 
         while True:
-            opcao = self.__tela_voo.tela_opcoes()
+            opcao = self.__tela_voo.mostra_opcoes()
             opcoes_controlador[opcao]()

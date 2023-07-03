@@ -213,5 +213,5 @@ class ControladorTripulante:
             0: self.retornar,
         }
         while True:
-            opcao = self.__tela_tripulante.tela_opcoes()
+            opcao = self.__tela_tripulante.mostra_opcoes()
             opcoes_controlador[opcao]()

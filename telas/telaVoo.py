@@ -2,6 +2,7 @@ from typing import TypedDict, Literal
 from datetime import datetime
 from telas.abstractTela import AbstractTela
 from helpers.verifica_data import verifica_data
+import customtkinter
 
 
 class DadosIncluiVoo(TypedDict):
@@ -30,99 +31,247 @@ class TelaVoo(AbstractTela):
             }
         )
 
-    def tela_opcoes(self):
-        print("-------- Voos ----------")
+    def mostra_opcoes(self) -> int:
+        # Configurações da interface gráfica
+        customtkinter.set_appearance_mode('dark')
+        customtkinter.set_default_color_theme('green')
+
+        # Criar uma nova janela
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Tela do sistema")
+
+        opcao_selecionada = None
+
+        def set_opcao_selecionada(index: int):
+            nonlocal opcao_selecionada
+            opcao_selecionada = index
+            nova_janela.destroy()
+
+        frame = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label = customtkinter.CTkLabel(master=frame, text="Voos", font=('Tahoma', 20))
+        label.pack(pady=12, padx=10)
+
         for index, opcao in self.opcoes.items():
-            print(f"{index} - {opcao}")
+            button = customtkinter.CTkButton(master=frame, text=opcao, command=lambda index=index: set_opcao_selecionada(index))
+            button.pack(pady=12, padx=10)
 
-        return self.verifica_opcao("Escolha uma opção: ")
+        nova_janela.mainloop()
 
-    def pega_dados_voo(self) -> DadosIncluiVoo:
-        print("-------- DADOS VOO ----------")
+        return opcao_selecionada
 
-        while True:
-            partida = input("Local de partida do Voo: ").upper().strip()
+    def pega_dados_voo(self) -> dict:
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
 
-            if partida:
-                break
+        dados = {}
 
-            else:
-                print("Dado invalido, digite novamente!!!")
+        def confirmar():
+            partida = partida_entry.get().strip()
+            destino = destino_entry.get().strip()
+            data_do_voo = data_entry.get().strip()
+            modelo_aviao = modelo_entry.get().strip()
 
-        while True:
-            destino = input("Local de destino do Voo: ").upper().strip()
+            if not partida:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Local de partida inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
 
-            if destino:
-                break
-
-            else:
-                print("Dado invalido, digite novamente!!!")
-
-        while True:
-            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
-
-            try:
-                data_do_voo = verifica_data(data_do_voo)
-                break
-
-            except ValueError:
-                print("Dado invalido, digite novamente!!!")
-
-        while True:
-            modelo_aviao = (
-                input("Modelo do Avião que realizará o Voo: ").upper().strip()
-            )
-
-            if modelo_aviao:
-                break
-
-            else:
-                print("Dado invalido, digite novamente!!!")
-
-        return {
-            "partida": partida,
-            "destino": destino,
-            "data_do_voo": data_do_voo,
-            "modelo_aviao": modelo_aviao,
-        }
-
-    def pega_dados_altera_voo(self) -> DadosAlteraVoo:
-        print("-------- DADOS VOO ----------")
-
-        partida = input("Local de partida do Voo: ").upper().strip()
-        destino = input("Local de destino do Voo: ").upper().strip()
-
-        while True:
-            data_do_voo = input("Data do Voo (formato: DD/MM/AAAA): ").strip()
+            if not destino:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Local de destino inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
 
             if not data_do_voo:
-                break
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Data do voo inválida, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
 
-            try:
-                data_do_voo = verifica_data(data_do_voo)
-                break
+            if not modelo_aviao:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Modelo do avião inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
 
-            except Exception:
-                print("Dado invalido, digite novamente!!!")
+            dados["partida"] = partida
+            dados["destino"] = destino
+            dados["data_do_voo"] = data_do_voo
+            dados["modelo_aviao"] = modelo_aviao
 
-        return {
-            "partida": partida,
-            "destino": destino,
-            "data_do_voo": data_do_voo,
-        }
+            label_mensagem = customtkinter.CTkLabel(master=frame, text="Dados inseridos com sucesso!", font=('Tahoma', 20),)
+            label_mensagem.pack(pady=50)
+            nova_janela.update_idletasks()
+            nova_janela.after(1000, nova_janela.destroy(),lambda: self.mostra_opcoes())
 
-    def mostra_registro(self, dados_aviao: "dict[str, str | int]"):
-        print("-------- LOG DE AÇÕES ----------")
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        partida_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de partida do Voo:", width=200)
+        partida_entry.pack(pady=10, padx=10)
+
+        destino_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de destino do Voo:", width=200)
+        destino_entry.pack(pady=10, padx=10)
+
+        data_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Data do Voo (formato: DD/MM/AAAA):", width=200)
+        data_entry.pack(pady=10, padx=10)
+
+        modelo_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Modelo do Avião que realizará o Voo:", width=200)
+        modelo_entry.pack(pady=10, padx=10)
+
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
+
+        nova_janela.mainloop()
+
+        return dados
+
+
+    def pega_dados_altera_voo(self) -> dict:
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
+
+        dados = {}
+
+        def confirmar():
+            nonlocal dados
+            partida = partida_entry.get().strip()
+            destino = destino_entry.get().strip()
+            data_do_voo = data_entry.get().strip()
+
+            if not partida:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Local de partida inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
+
+            if not destino:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Local de destino inválido, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
+
+            if not data_do_voo:
+                label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Data do voo inválida, digite novamente!", font=('Tahoma', 12))
+                label_mensagem.pack(pady=10)
+                label_mensagem.after(4000, lambda: label_mensagem.destroy())
+                return
+
+            dados["partida"] = partida
+            dados["destino"] = destino
+            dados["data_do_voo"] = data_do_voo
+
+            label_mensagem = customtkinter.CTkLabel(master=frame, text="Dados inseridos com sucesso!", font=('Tahoma', 20))
+            label_mensagem.pack(pady=50)
+            nova_janela.update_idletasks()
+            nova_janela.after(1000, nova_janela.destroy(),lambda: self.mostra_opcoes())
+
+
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        partida_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de partida do Voo:")
+        partida_entry.pack(pady=10, padx=10)
+
+        destino_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Local de destino do Voo:")
+        destino_entry.pack(pady=10, padx=10)
+
+        data_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Data do Voo (formato: DD/MM/AAAA):")
+        data_entry.pack(pady=10, padx=10)
+
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
+
+        nova_janela.mainloop()
+
+        return dados
+
+
+    def mostra_registro(self, dados_aviao: dict):
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Log de Ações")
+
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Log de Ações", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
         for index, valor in dados_aviao.items():
-            print(f" {index} : {valor} ")
-            print("--------------------------------")
+            registro_str = f"{index}: {valor}"
+            label_registro = customtkinter.CTkLabel(master=frame_principal, text=registro_str, font=('Tahoma', 12))
+            label_registro.pack(pady=5, padx=10, side='top')
+        botao_voltar = customtkinter.CTkButton(master=frame_principal, text="OK", command=nova_janela.destroy)
+        botao_voltar.pack(pady=10)
+        nova_janela.mainloop()
 
     def mostra_voo(self, dados_voo: dict):
-        for chave, valor in dados_voo.items():
-            print(f"{chave}: {valor}")
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 500, 600))
+        nova_janela.title("Dados do Voo")
 
-        print("\n")
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
 
-    def seleciona_voo(self):
-        codigo = input("Insira o código do voo que deseja selecionar: ").upper()
-        return codigo
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Dados do Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        if not dados_voo:
+            label_mensagem = customtkinter.CTkLabel(master=frame_principal, text="Sem registros encontrados", font=('Tahoma', 14))
+            label_mensagem.pack(pady=50, padx=10, side='top', fill="both", expand=True)
+        else:
+            frame_registros = customtkinter.CTkFrame(master=frame_principal)
+            frame_registros.pack(pady=10, padx=10, side='top', fill="both", expand=True)
+
+            contador = 1
+            for chave, valor in dados_voo.items():
+                registro_str = f"{contador} - {chave}: {valor}"
+                label_registro = customtkinter.CTkLabel(master=frame_registros, text=registro_str, font=('Tahoma', 14))
+                label_registro.pack(pady=5, padx=10, side='top', fill="both", expand=True)
+                contador += 1
+        
+        nova_janela.after(2000, lambda: nova_janela.destroy())
+        nova_janela.mainloop()
+
+
+    def seleciona_voo(self) -> str:
+        codigo_selecionado = ""
+
+        def confirmar():
+            nonlocal codigo_selecionado
+            codigo_selecionado = codigo_entry.get()
+            nova_janela.destroy()
+
+        nova_janela = customtkinter.CTk()
+        nova_janela.geometry(self.centralizar_janela(nova_janela, 240, 500))
+        nova_janela.title("Selecionar Voo")
+
+        frame_principal = customtkinter.CTkFrame(master=nova_janela, corner_radius=20, border_width=4, border_color='green')
+        frame_principal.pack(pady=20, padx=60, fill='both', expand=True)
+
+        label_titulo = customtkinter.CTkLabel(master=frame_principal, text="Selecionar Voo", font=('Tahoma', 16))
+        label_titulo.pack(pady=12, padx=10, side='top')
+
+        codigo_entry = customtkinter.CTkEntry(master=frame_principal, placeholder_text="Insira o código do voo que deseja selecionar:", width=120)
+        codigo_entry.pack(pady=10, padx=10)
+
+        botao_confirmar = customtkinter.CTkButton(master=frame_principal, text="Confirmar", command=confirmar)
+        botao_confirmar.pack(pady=10, padx=10)
+
+        nova_janela.mainloop()
+
+        return codigo_selecionado
+
